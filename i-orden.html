@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>I orden</title>
+<link rel="manifest" id="pwa-manifest">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="I orden">
+<meta name="theme-color" content="#3A6648">
+<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAD10lEQVR42u3d0W3CMBiFUc/VCTpJB2SjDlCp6gLtcytV4BDH/n2PpbsAfCdEgKC1z68Ps9g1j4IRYEaAGQFmBJgRYEaAGQF2YC9vr98j5zEmIKN0MghQPBEEKJ4IAlRPAwGqp4EA5ZNAgPJJIED5JBCgfBIIUD4JBCifBAKUT0K6AEVSkClAhSTkClAeBZkC1EZCrgCFUZArQFkUZApQEwm5AhREQa4A5VCQK0AxFOQKUAoFuQIUQkGuAGVQkCtAERTkClACBbkCFGCzFTT1W7SCpn6LVtDUb9EKmvotWgEBRoD6LVdBU79FK2jqt2gFBBgB6rdcBU39Fq2AACNA/ZaroKnfohUQYASo33IVEGAEqN9yFRBgBKjfchUQYASo33IVEGAEqN9yFRBgBKjfchUQYASo33IVZAhwjh0CCCCgZ7f326/tKaDiq6MzXsDf+qsoIMB5XsB/9c9QQAAB1wq4V//VCsYKqPoegTNGwKP1r/w6QIBDAAFOv4Ce+gkgYC8BvfXvIaDyZ4XOXAErfzpGgNMnoEL9BBAwRsDqdz8E2NhVqf98AZ59q1R/jwIC7Pz6CTDXfwJM/QSYux8CzPW/tgAlqL9i/Y8qIMD2u/shwFz/CTD1E2C5dz8EmOs/Abt9N1T9BBAwosYd734I2FHAqCJ3rZ+AJAFHy9y5fgIIyK6fgDQBvZUSQMB+Ah4tNaF+AlIF3Cs2pX4CCMh655MAAu6Xm1Q/AekC/hacVj8BKZ8JP1Jx2t0PAb7B9rvkxPoJIOAWe+0ngAICCKAgu34CCMiunwAKCPCLWRSonwAK8uongAACCKAgt34CKMiunwACCPBPehSon4Cdvhu60y90EUAAAQQQQEAdAZUVOFkCepomwCGAAIcAAhwC9lXg5Ajo7ZkAhwACHAL2VuBkCDjSMgEOAR8Rd0K2/64TQIHtUD8BRsBxARRY9foJMAKeE0CBVa6fACPgeQEUWNX6CTACzhFAgVWsnwAj4DwBFFi1+gkwAs4VQIFVqp8AI+B8ARRYlfrHCaDAKtRPgBEwTgAFtnr94wVQYCvXT4ARMF4ABbZq/dcJoMBWrP9aARTYavUTYARcK4ACW6n+OQIosFXqnyeAAluh/rkCKLDZ9c8XQIHN7m++AArUTwAF6ieAAvUTQIH6CaBA/QRQoH4CKFA/ARSonwASlE8ABeongAL1E0CC8gmgQP0EkKB8AihQPwEkKJ8AEpRPAAnKJ4AE5RNAgvIJIEH5BJCgfAJoUD0BNKiegFQRnjMCskR4TgjIkOExJsCMADMCzAgwI8CMADMCzAgw69sP5jD3Y4ODY+0AAAAASUVORK5CYII=">
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAD10lEQVR42u3d0W3CMBiFUc/VCTpJB2SjDlCp6gLtcytV4BDH/n2PpbsAfCdEgKC1z68Ps9g1j4IRYEaAGQFmBJgRYEaAGQF2YC9vr98j5zEmIKN0MghQPBEEKJ4IAlRPAwGqp4EA5ZNAgPJJIED5JBCgfBIIUD4JBCifBAKUT0K6AEVSkClAhSTkClAeBZkC1EZCrgCFUZArQFkUZApQEwm5AhREQa4A5VCQK0AxFOQKUAoFuQIUQkGuAGVQkCtAERTkClACBbkCFGCzFTT1W7SCpn6LVtDUb9EKmvotWgEBRoD6LVdBU79FK2jqt2gFBBgB6rdcBU39Fq2AACNA/ZaroKnfohUQYASo33IVEGAEqN9yFRBgBKjfchUQYASo33IVEGAEqN9yFRBgBKjfchUQYASo33IVZAhwjh0CCCCgZ7f326/tKaDiq6MzXsDf+qsoIMB5XsB/9c9QQAAB1wq4V//VCsYKqPoegTNGwKP1r/w6QIBDAAFOv4Ce+gkgYC8BvfXvIaDyZ4XOXAErfzpGgNMnoEL9BBAwRsDqdz8E2NhVqf98AZ59q1R/jwIC7Pz6CTDXfwJM/QSYux8CzPW/tgAlqL9i/Y8qIMD2u/shwFz/CTD1E2C5dz8EmOs/Abt9N1T9BBAwosYd734I2FHAqCJ3rZ+AJAFHy9y5fgIIyK6fgDQBvZUSQMB+Ah4tNaF+AlIF3Cs2pX4CCMh655MAAu6Xm1Q/AekC/hacVj8BKZ8JP1Jx2t0PAb7B9rvkxPoJIOAWe+0ngAICCKAgu34CCMiunwAKCPCLWRSonwAK8uongAACCKAgt34CKMiunwACCPBPehSon4Cdvhu60y90EUAAAQQQQEAdAZUVOFkCepomwCGAAIcAAhwC9lXg5Ajo7ZkAhwACHAL2VuBkCDjSMgEOAR8Rd0K2/64TQIHtUD8BRsBxARRY9foJMAKeE0CBVa6fACPgeQEUWNX6CTACzhFAgVWsnwAj4DwBFFi1+gkwAs4VQIFVqp8AI+B8ARRYlfrHCaDAKtRPgBEwTgAFtnr94wVQYCvXT4ARMF4ABbZq/dcJoMBWrP9aARTYavUTYARcK4ACW6n+OQIosFXqnyeAAluh/rkCKLDZ9c8XQIHN7m++AArUTwAF6ieAAvUTQIH6CaBA/QRQoH4CKFA/ARSonwASlE8ABeongAL1E0CC8gmgQP0EkKB8AihQPwEkKJ8AEpRPAAnKJ4AE5RNAgvIJIEH5BJCgfAJoUD0BNKiegFQRnjMCskR4TgjIkOExJsCMADMCzAgwI8CMADMCzAgw69sP5jD3Y4ODY+0AAAAASUVORK5CYII=">
+<script>
+(function(){
+  var manifest = {
+    name: "I orden",
+    short_name: "I orden",
+    description: "Hold orden på rutiner og vaner",
+    start_url: ".",
+    display: "standalone",
+    background_color: "#F0F2ED",
+    theme_color: "#3A6648",
+    icons: [
+      { src: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAD10lEQVR42u3d0W3CMBiFUc/VCTpJB2SjDlCp6gLtcytV4BDH/n2PpbsAfCdEgKC1z68Ps9g1j4IRYEaAGQFmBJgRYEaAGQF2YC9vr98j5zEmIKN0MghQPBEEKJ4IAlRPAwGqp4EA5ZNAgPJJIED5JBCgfBIIUD4JBCifBAKUT0K6AEVSkClAhSTkClAeBZkC1EZCrgCFUZArQFkUZApQEwm5AhREQa4A5VCQK0AxFOQKUAoFuQIUQkGuAGVQkCtAERTkClACBbkCFGCzFTT1W7SCpn6LVtDUb9EKmvotWgEBRoD6LVdBU79FK2jqt2gFBBgB6rdcBU39Fq2AACNA/ZaroKnfohUQYASo33IVEGAEqN9yFRBgBKjfchUQYASo33IVEGAEqN9yFRBgBKjfchUQYASo33IVZAhwjh0CCCCgZ7f326/tKaDiq6MzXsDf+qsoIMB5XsB/9c9QQAAB1wq4V//VCsYKqPoegTNGwKP1r/w6QIBDAAFOv4Ce+gkgYC8BvfXvIaDyZ4XOXAErfzpGgNMnoEL9BBAwRsDqdz8E2NhVqf98AZ59q1R/jwIC7Pz6CTDXfwJM/QSYux8CzPW/tgAlqL9i/Y8qIMD2u/shwFz/CTD1E2C5dz8EmOs/Abt9N1T9BBAwosYd734I2FHAqCJ3rZ+AJAFHy9y5fgIIyK6fgDQBvZUSQMB+Ah4tNaF+AlIF3Cs2pX4CCMh655MAAu6Xm1Q/AekC/hacVj8BKZ8JP1Jx2t0PAb7B9rvkxPoJIOAWe+0ngAICCKAgu34CCMiunwAKCPCLWRSonwAK8uongAACCKAgt34CKMiunwACCPBPehSon4Cdvhu60y90EUAAAQQQQEAdAZUVOFkCepomwCGAAIcAAhwC9lXg5Ajo7ZkAhwACHAL2VuBkCDjSMgEOAR8Rd0K2/64TQIHtUD8BRsBxARRY9foJMAKeE0CBVa6fACPgeQEUWNX6CTACzhFAgVWsnwAj4DwBFFi1+gkwAs4VQIFVqp8AI+B8ARRYlfrHCaDAKtRPgBEwTgAFtnr94wVQYCvXT4ARMF4ABbZq/dcJoMBWrP9aARTYavUTYARcK4ACW6n+OQIosFXqnyeAAluh/rkCKLDZ9c8XQIHN7m++AArUTwAF6ieAAvUTQIH6CaBA/QRQoH4CKFA/ARSonwASlE8ABeongAL1E0CC8gmgQP0EkKB8AihQPwEkKJ8AEpRPAAnKJ4AE5RNAgvIJIEH5BJCgfAJoUD0BNKiegFQRnjMCskR4TgjIkOExJsCMADMCzAgwI8CMADMCzAgw69sP5jD3Y4ODY+0AAAAASUVORK5CYII=", sizes: "192x192", type: "image/png" },
+      { src: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAAD0eNT6AAAOF0lEQVR42u3c0W3bWhBFUdaVClKJC3RHKcCAkQYc2F9BYBuRxHs5M2cNsBoQHZ1NAe8dx+vvFwAgzOFTAAAFAAAoAABAAQAACgAAUAAAgAIAABQAAKAAAAAFAAAoAABAAQAACgAAUAAAgAIAABQAAKAAAAAFAAAoAABQAECIH08/3z7jswEFAHRZ7ao8M1AAwLR1VwmgAAArrw5AAQDWXhWAAgBrjyoABQDWHlUACgAsPooAFABYfBQBKACw+CgCUABg9VEDoADA6qMGQAGA1UcNgAIAq48aAAWA1Qc1AAoAqw9qABQAlh+UACgArD6oARQAWH5QAigAsPqgBlAAYPlBCaAAwPKDEkABgOUHJYACAKsPagAFgOX3bQ5KAAWA5QeUAAoAyw8oARQAlh9QAigArD+gAlAAWH5ACaAAsPyAEkABYPkBJYACwPIDSgAFgPUHFQAKAMsPSgAUAJYflAAKAKw/qAAUAJYfUAIoAKw/oAJQAFh+QAmgALD+gApAAWD5ASWAAsD6AyoABYDlB5QACgDrD6gAFADWH1ABKAAsP6AEUABYf0AFoACw/IASQAFg/QEVgAKw/gAqAAVg/QFUAArA8gMoARSA9QdQASgA6w+gAhQA1h9ABSgArD+AClAAWH4AJaAAsP4AKkABYP0BVIACwPoDqAAFgPUHUAEKAOsPoAIUANYfUAEoAOsPoAJQANYfQAWgACw/gBJAAVh/ABWAArD+ACoABWD9AVQACsD6A6gAFID1B1ABKADrD6ACFAAKAEABKACsP4AKUABYfwAVoACw/gAqQAFg/QFUgAKw/gCoAAVg/QFQAQrA+gOgAhSA9QdABSgA6w+AClAACgAABaAArD8AKkABWH8AVIACsP4AqAAFYP0BUAEKwPoDqAAUgAIAUAAoAOsPoAIUgE/B+gOoAAWA9QdQAQrA+gOgAhSAAgBAASgA6w+AClAA1h8AFaAAFAAACkABWH8AVIACsP4AqAAFYP0BUAEKQAEAoAAUgPUHQAUoAOsPgApQAAoAAAWgAKw/ACpAAVh/AFSAAlAAACiA5ALwlw2ACkgrAH/RAKgABQAACuCw/gAQWAGH9QeAwApQAACgAKw/AGRUgAIAAAVg/QEgowIO6w8AgRWgAABAAVh/AMioAAUAAArA+gNARgUoAABQANYfADIqQAEAgAKw/gCQUQGH9QeAwApQAACgAKw/AGRUgAIAAAVg/QEgowIUAAAoAOsPABkVoAAAQAFYfwDIqAAFAAAKQAEAgAKw/gAwtQIUAAAoAOsPABkVoAAAQAFYfwDIqAAFAAAKwPoDQEYFKAAAUAAKAAAUgPUHgKkVoAAAQAFYfwDIqAAFAAAKQAEAgAKw/gAwtQIUAAAoAOsPABkVoABYyzl3//kOUQAKAAXgnAJAAUwtAH8ZCsA5V7sAnn89f/DdNqMCFAAKwDkF8P3i/w/fdwpAAaAAnOteALcsvwpQANYfBeDchAK4d/2VQL8KUAAoAOcUwHnrrwIUgAJAATjXqQDOXH8VoACsPwrAuQ4FsGL9VUD9ClAAKADnkgtg5forAAWgABSAcy61AFSAArD+CsA5V60Adqy/AqhbAQoABeBcYgHsWn8FoAAUgAJwzqUWgApQANZfATjnKhTA7vVXADUrQAGgAJxLKoAr1l8BKAAFoACccwqA7ALwxBWAc25/AVy1/gqgZgUoABSAcwkFcOX6KwAFoAAUgHMusQB8FyoABaAAnHNXFID3fwVQowA8aQXgnNtXAFevvwKoWwEKAAXgnAKw/gpAAaAAnJtTAN7/FYACQAE4l1YA1l8B1CoAT1gBOOcyCsD3X/0KUAAoAOemFYD3fwWgAFAAzqUVgPVXAAoABeCcArD+CqBCAXiyCsA5t7YAvP+rAAWAAnAurQCsvwJQACgA5xSA9VcACgBgPu//CkABAFh/668AKhWAJwpg/alVAQoAQAEoAAWgAACsv/VXAAoAwPpbfwWgAAAUgAJQANYfwPrTuQIUAID1t/4KQAEAKAAFoAAUAID1t/4KQAEAWH8UgPUHUAB0rgAFAGD9rb8CUAAA1t/6KwAFAKAAPAcFoAAArD8KQAEAWH8UgAIAmFMAnoECsP4A3v+ZWgEKAMD6W38FoAAA/PqPAlAAAN7/UQAKAMD6owAUAIBf/1EACgDA+z8KQAEAWH8UAAB+/SelADwxAO//1K4ABQBg/VEACgDAr/8oAAUA4P0fBaAAAKw/CkABAPj1HwWgAPiKc3+f9VcAKAAUgFMA1t/6owBQAE4B/LuUCsD6owBQAG5qASSsmPd/FAAKwLkzVtH6W38FoABQAK5jASStmvVHAaAAnHu/pHXz/o8CQAE4t6IAKi+c9UcBgHMrC6Dq0ll/FAA4t7oAqi2e938UACgAl1YA1h8F4GmhANzOAqiyfNYfBeBpoQDc7gK4egG9/6MAPCkUgLuqAK5aQetPxwpQACgApwCsPwpAAaAAXPcC2L2ICgAFoABQAK5KAexaReuPAlAAKABXrQBWr6P1RwEoABSAUwAKAAWgAlAArk4BrFpJ64//GlABoABc9QI4ey2tPwpAAaAAnAJQACgABYACcHUL4KzVtP4oAAWAAnDdCuDR9bT+KAAFgAJwXQvgkRVVACgABYACcGkFYP1RAAoABeC6F8Cta2r9UQAKAAXgHr0qi3rLqioAFIACQAG4Mwqg06pafxSAAkABuDMLoMO6Wn8UgAJAAbipBfDdylp/FIACQAG4FQVQuQK8/6MAFACwWrW1tf4oAAUAJFaA9UcBKAAgqQA6/r8KUAAKAFAB1h8FoAAAFWD9UQAKAFAACgAFsKsAVACgAqw/dddfAQAqwPqjABQAoAIUAApAAQAKwPqjABQAoAKsPwpAAQAqQAGgABQAoACsPwpAAQAqwPqjAABUgAIgrQBUAKACrD81118BAArA+qMAFACgAhQACkABACrA+qMAFACgAqw/CkABAApAAaAAFACgAqw/CkAFACrA+lN9/RUAoAAUAApAAQAqwPqjABQAoAKsPwpAAQAqQAGgAFQAoACsP53XXwEAKsD6owAUAKACFAAKQAEACsD6owAUAKACrD8KQAUAKkAB0Hn9FQCgAqw/CkABsIJz7v7zHaIAFAAKwDkFgAJQACgA5xQACqBPAagABeCcUwDUWH8FgAJwTgGgABQACsA5BYACUAAoAOcUAApABaAAnFMAzFl/BYACcE4BoAAUAArAOQWAAlAAKADnFAAKQAWgAJxTAMxZfwWAAnBOAaAAFAAKwDkFgAJQACgA5xQACkAFoACcUwDMWX8FgAJwTgGgABQACsA5BYACUAEoAOcUAFPXXwGgAJxTACgABYACcE4BoABUAArAOQXA1PVXACgA5xQACkABoACcUwAoABWAAnBOATB1/RUACsA5BYACUAAoAOcUAApABaAAnFMATF1/BYACcE4BoAAUAArAOQWAAlABKADnFABT118BoACcUwAoAAUAAApABQDA1PVXAACgAFQAAGSsvwIAAAWgAABAAagAAJi6/goAABSACgCAjPVXAACgABQAACgAFQAAU9dfAQCAAlABAJCx/goAABSACgCAjPVXAACgAFQAAGSsvwIAAAWgAABAAagAAJi6/goAABSACgCAjPVXAACgAFQAAGSsvwIAAAWgAgAgY/0VAAAoABUAABnrP6MAVAAA1l8BAIACyCkAFQCA9VcAAKAAcgpABQBg/RUAACiAnAJQAQBYfwUAAAogpwBUAADWP7UAVAAA1l8BAIACyCkAFQCA9VcAAKAAcgpABQBg/VMLQAUAYP0VAAAogJwCUAEAWP/UAlABAFh/BQAACuBFBQBg/cP2MK8AVAAA6euvAABAAagAAKy/AlABAFh/BaAAAFAACkAFAGD9FYAKAMD6KwAVAID1VwAKAAAFoABUAADWXwGoAACsvwJQAAAoAAWgAgCw/gpABQBg/RWACgDA+isAFQCA9VcACgAABaAAVACA9UcBqAAA648CUAEA1l8B+BRUAID1VwCoAADrrwBQAAAKQAGgAgCsvwLAvzwA668AVAAA1l8BqAAArL8CUAEAWH8FoAIAsP4KQAUAYP0VgAoAwPorABUAgE1RAAoAQAGgAFQAgPVHAagAAOuPAlABANYfBaACAKw/CkAFAFh/FIAKALD+CgAlAGD5FQAqAMD6KwBUAID1VwCoAADrrwBQAQDWXwGgAgCsvwJABQBYfwWACgCsPwoAFQBYfxQASgCw/CgAVABg/VEAqADA+qMAVACA9UcBqAAA648CUAIAlh8FoAIArD8KQAUAWH8UgAoAsP4KACUAYPkVACoAwPorAJQAYPlRAKgAwPqjAFABgPVHAaAEAMuPAkAFANYfBYASACw/CgAVAFh/FABKALD8KABUAGD9UQAoAcDyowBQAYD1RwGgBADLjwJACQCWHwWACgDrDwoAJQCWHxQASgAsPygAlABYfhQAKAGw/CgAUAFg/VEAoATA8qMAQAmA5UcBgBIAy48CACUAlh8FAGoArD4KAJQAWH4UACgBLD8oAJSAVcDygwJADYDVBwWAEgDLDwoANQBWHxQASgAsPygA1ABYfVAAqAGw+qAAUANg9UEBoAbA6qMAQA2AfyMoAFADWH1QAKAIsPigAEARYPFBAYAiwOKDAgBVgLUHBQCqAGsPCgBUAdYeFACQXgeePSgAYFoleGagAIAuNeGzAQUAACgAAEABAAAKAABQAACAAgAAFAAAoAAAAAUAACgAAEABAAAKAABQAACAAgAAFAAAoAAAAAUAACgAAFAAAIACAACm+gNXZ6hlHoc4CwAAAABJRU5ErkJggg==", sizes: "512x512", type: "image/png", purpose: "any maskable" }
+    ]
+  };
+  var blob = new Blob([JSON.stringify(manifest)], {type:"application/manifest+json"});
+  var url  = URL.createObjectURL(blob);
+  document.getElementById("pwa-manifest").href = url;
+})();
+</script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:        #F0F2ED;
+  --card:      #FFFFFF;
+  --ink:       #1E2D24;
+  --green:     #3A6648;
+  --green-mid: #5A8C6A;
+  --green-soft:#E3EDE6;
+  --sage:      #A8BBA0;
+  --amber:     #B86E2A;
+  --amber-soft:#F5E8D8;
+  --muted:     #6B7D6F;
+  --line:      #DDE5DE;
+  --white:     #FFFFFF;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+/* ── Layout ── */
+.shell { max-width: 580px; margin: 0 auto; padding: 0 0 80px; }
+
+/* ── Top bar ── */
+.topbar {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--bg); border-bottom: 1px solid var(--line);
+  padding: 14px 18px 0;
+}
+.topbar-row { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 10px; }
+h1 { font-size: 20px; font-weight: 700; letter-spacing: -0.02em; }
+.date-lbl { font-size: 13px; color: var(--muted); }
+.edit-btn { font-size: 13px; font-weight: 600; color: var(--muted); background: none; border: none; cursor: pointer; }
+.edit-btn.on { color: var(--green); }
+
+/* ── Tab bar ── */
+.tabs { display: flex; gap: 2px; }
+.tab {
+  flex: 1; padding: 8px 0; border: none; background: none; cursor: pointer;
+  font-size: 12px; font-weight: 600; color: var(--muted);
+  border-bottom: 2px solid transparent;
+}
+.tab.on { color: var(--green); border-bottom-color: var(--green); }
+
+/* ── Section labels ── */
+.sec-lbl {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.09em;
+  text-transform: uppercase; color: var(--sage);
+  padding: 18px 18px 6px;
+}
+
+/* ── Card list ── */
+.card { background: var(--card); border-radius: 14px; overflow: hidden; margin: 0 12px 4px; }
+
+/* ── Task row ── */
+.trow {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 12px 14px; border-bottom: 1px solid var(--line);
+  position: relative;
+}
+.trow:last-child { border-bottom: none; }
+.trow.urgent { background: var(--amber-soft); }
+
+.chk {
+  width: 24px; height: 24px; border-radius: 7px; flex-shrink: 0; margin-top: 1px;
+  border: 2px solid var(--line); background: transparent; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; color: transparent; transition: background .12s, border-color .12s;
+}
+.chk.urgent-chk { border-color: var(--amber); }
+.chk.done { border-color: var(--green); background: var(--green); color: #fff; }
+
+.trow-body { flex: 1; min-width: 0; }
+.trow-name { font-size: 14px; font-weight: 500; }
+.trow.checked .trow-name { color: var(--muted); text-decoration: line-through; }
+.trow-meta { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.trow-goals { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+.goal-pill {
+  font-size: 11px; color: var(--green); background: var(--green-soft);
+  padding: 2px 8px; border-radius: 99px;
+}
+
+.badge {
+  font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 99px;
+  white-space: nowrap; align-self: center; flex-shrink: 0;
+}
+.badge.late { color: var(--muted); background: #E8EDE8; }
+.badge.must { color: var(--amber); background: #fff; border: 1px solid var(--amber); }
+.snooze-btn {
+  font-size: 11px; color: var(--muted); background: none;
+  border: 1px solid var(--line); border-radius: 8px;
+  padding: 3px 8px; cursor: pointer; white-space: nowrap; align-self: center; flex-shrink: 0;
+}
+.del-btn { font-size: 13px; color: #c0392b; background: none; border: none; cursor: pointer; padding: 2px 4px; align-self: center; }
+.edit-icon-btn { font-size: 15px; color: var(--muted); background: none; border: none; cursor: pointer; padding: 2px 5px; align-self: center; opacity: 0.7; }
+.edit-icon-btn:hover { opacity: 1; color: var(--green); }
+.del-full-btn {
+  display: block; width: 100%; margin-top: 12px; padding: 11px 0; border-radius: 12px;
+  border: 1.5px solid #c0392b; background: transparent; color: #c0392b;
+  font-size: 15px; font-weight: 600; cursor: pointer;
+}
+
+/* ── Info panel ── */
+.info-btn {
+  width: 20px; height: 20px; border-radius: 99px; border: 1.5px solid var(--line);
+  background: none; color: var(--muted); font-size: 11px; font-style: italic;
+  font-family: Georgia, serif; cursor: pointer; flex-shrink: 0; align-self: center;
+  display: flex; align-items: center; justify-content: center;
+}
+.info-btn.on { border-color: var(--green); color: var(--green); background: var(--green-soft); }
+.infopanel {
+  padding: 6px 14px 12px 50px; border-bottom: 1px solid var(--line);
+  background: #F7FAF7;
+}
+.infopanel ul { padding-left: 16px; }
+.infopanel li { font-size: 13px; color: var(--ink); line-height: 1.6; margin-bottom: 2px; }
+
+/* ── Empty state ── */
+.empty { padding: 20px 18px; font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+/* ── Month wheel ── */
+.wheel {
+  display: grid; grid-template-columns: repeat(12, 1fr); gap: 3px;
+  margin: 0 12px 4px; padding: 10px 8px;
+  background: var(--card); border-radius: 12px;
+}
+.wbtn {
+  background: transparent; border: none; border-radius: 7px;
+  padding: 5px 0 3px; font-size: 11px; font-weight: 500; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; gap: 3px; color: var(--ink);
+}
+.wbtn.cur { background: var(--green); color: #fff; font-weight: 700; }
+.wbtn.sel { background: var(--green-soft); }
+.wdot { width: 4px; height: 4px; border-radius: 99px; }
+.wdot.on { background: var(--amber); }
+.wbtn.cur .wdot.on { background: #fff; }
+
+/* ── Preview ── */
+.preview-head { padding: 10px 14px; font-size: 13px; font-weight: 600; color: var(--muted); border-bottom: 1px solid var(--line); }
+.preview-row { display: flex; justify-content: space-between; align-items: center; padding: 9px 14px; font-size: 14px; border-bottom: 1px solid var(--line); }
+.preview-row:last-child { border-bottom: none; }
+.must-tag { font-size: 11px; color: var(--amber); font-weight: 600; }
+
+/* ── Kategorier-fane ── */
+.cat-group { margin-bottom: 4px; }
+.subcat-lbl { font-size: 11px; font-weight: 600; color: var(--sage); padding: 10px 14px 4px; letter-spacing: 0.06em; text-transform: uppercase; }
+
+/* ── Mål-fane ── */
+.goal-card {
+  margin: 0 12px 8px; background: var(--card); border-radius: 14px; overflow: hidden;
+}
+.goal-head { display: flex; align-items: center; gap: 10px; padding: 14px; }
+.goal-icon { font-size: 20px; }
+.goal-name { font-size: 15px; font-weight: 600; }
+.goal-tasks { padding: 0 14px 10px 14px; }
+.goal-task-item { font-size: 13px; color: var(--muted); padding: 4px 0; border-bottom: 1px solid var(--line); }
+.goal-task-item:last-child { border-bottom: none; }
+
+/* ── Legg til-flyt ── */
+.fab {
+  position: fixed; bottom: 24px; right: 24px; width: 52px; height: 52px;
+  border-radius: 99px; background: var(--green); color: #fff; border: none;
+  font-size: 26px; cursor: pointer; box-shadow: 0 3px 12px rgba(0,0,0,.18);
+  display: flex; align-items: center; justify-content: center;
+  transition: transform .1s;
+}
+.fab:active { transform: scale(.92); }
+
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.32);
+  display: flex; align-items: flex-end; justify-content: center; z-index: 200;
+}
+.modal {
+  background: var(--card); border-radius: 20px 20px 0 0;
+  width: 100%; max-width: 580px; max-height: 92vh;
+  overflow-y: auto; padding: 20px 18px 32px;
+}
+.modal-title { font-size: 18px; font-weight: 700; margin-bottom: 16px; }
+.close-btn { float: right; background: none; border: none; font-size: 22px; cursor: pointer; color: var(--muted); margin-top: -4px; }
+
+/* ── Form elements ── */
+.field-lbl { font-size: 12px; font-weight: 700; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; display: block; margin: 16px 0 6px; }
+.field-lbl:first-of-type { margin-top: 0; }
+.inp {
+  width: 100%; padding: 10px 12px; border-radius: 10px;
+  border: 1.5px solid var(--line); font-size: 15px;
+  background: var(--bg); color: var(--ink);
+}
+.inp:focus { outline: none; border-color: var(--green); }
+.inp-sm { width: 80px; }
+.chips { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+.chip {
+  padding: 6px 12px; border-radius: 99px; font-size: 13px; cursor: pointer;
+  border: 1.5px solid var(--line); background: var(--card); color: var(--ink);
+  white-space: nowrap;
+}
+.chip.on { border-color: var(--green); background: var(--green-soft); color: var(--green); font-weight: 600; }
+.chip.amber { border-color: var(--amber); background: var(--amber-soft); color: var(--amber); font-weight: 600; }
+.chip-new {
+  padding: 6px 12px; border-radius: 99px; font-size: 13px; cursor: pointer;
+  border: 1.5px dashed var(--sage); background: transparent; color: var(--muted);
+}
+.chip-new:hover { border-color: var(--green); color: var(--green); }
+
+.save-btn {
+  width: 100%; margin-top: 20px; padding: 13px 0; border-radius: 12px;
+  border: none; background: var(--green); color: #fff;
+  font-size: 16px; font-weight: 700; cursor: pointer;
+}
+.save-btn:disabled { background: #C0CDBC; cursor: default; }
+
+.step-indicator { font-size: 12px; color: var(--sage); margin-bottom: 6px; }
+.step-back { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 13px; margin-bottom: 8px; }
+
+.warn { font-size: 13px; color: var(--amber); margin-top: 6px; }
+
+textarea.inp { min-height: 80px; resize: vertical; }
+
+/* scrollbar */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--line); border-radius: 99px; }
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+@media (max-width: 480px) {
+  body { font-size: 13px; }
+  h1 { font-size: 17px; }
+  .date-lbl, .edit-btn { font-size: 12px; }
+  .tab { font-size: 11px; padding: 7px 0; }
+  .sec-lbl { font-size: 10px; padding: 14px 14px 5px; }
+  .trow { padding: 9px 10px; gap: 9px; }
+  .trow-name { font-size: 13px; }
+  .trow-meta { font-size: 11px; }
+  .goal-pill { font-size: 10px; padding: 2px 6px; }
+  .chk { width: 22px; height: 22px; border-radius: 6px; font-size: 12px; }
+  .empty { font-size: 13px; padding: 16px 14px; }
+  .card { margin: 0 8px 4px; }
+  .wheel { margin: 0 8px 4px; padding: 8px 4px; }
+  .wbtn { font-size: 10px; }
+  .goal-card { margin: 0 8px 8px; }
+  .goal-name { font-size: 13px; }
+  .goal-task-item { font-size: 12px; }
+  .preview-head { font-size: 12px; padding: 8px 12px; }
+  .preview-row { font-size: 13px; padding: 8px 12px; }
+  .modal { padding: 16px 14px 28px; }
+  .modal-title { font-size: 16px; }
+  .inp { font-size: 14px; padding: 9px 10px; }
+  .chip { font-size: 12px; padding: 5px 10px; }
+  .save-btn { font-size: 14px; padding: 12px 0; }
+  .fab { width: 46px; height: 46px; font-size: 22px; bottom: 18px; right: 16px; }
+}
+</style>
+</head>
+<body>
+<div class="shell" id="app"><div class="empty" style="padding:40px 18px">Laster …</div></div>
+
+<script>
+/* ══════════════════════════════════════════════
+   DATA & HELPERS
+══════════════════════════════════════════════ */
+const DAY = 86400000;
+const norm   = d => { const x = new Date(d); x.setHours(0,0,0,0); return x; };
+const iso    = d => { const x = norm(d); return x.getFullYear()+"-"+pad(x.getMonth()+1)+"-"+pad(x.getDate()); };
+const pad    = n => String(n).padStart(2,"0");
+const daysB  = (a,b) => Math.round((norm(b)-norm(a))/DAY);
+const addD   = (d,n) => new Date(norm(d).getTime()+n*DAY);
+const esc    = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+
+const UKEDAGER = ["man","tir","ons","tor","fre","lør","søn"];
+const UKEDAGER_FULL = ["mandag","tirsdag","onsdag","torsdag","fredag","lørdag","søndag"];
+const MND  = ["jan","feb","mar","apr","mai","jun","jul","aug","sep","okt","nov","des"];
+const MND_FULL = ["januar","februar","mars","april","mai","juni","juli","august","september","oktober","november","desember"];
+const dow  = d => (norm(d).getDay()+6)%7;  // 0=man … 6=søn
+
+const today = norm(new Date());
+
+/* ══════════════════════════════════════════════
+   SCHEDULE TYPES
+   Each task has: { id, name, type, schedule, slack, mustDo, cats, goals, info, log, snoozeUntil }
+   schedule:
+     weekly  → { anchors:[0..6] }   (ukedager)
+     interval→ { days:N }
+     monthly → { months:[1..12], day?:N, lastWeekOf?:true }
+     specific→ { month:N, day:N }   (engangs-lignende, men gjentas hvert år)
+══════════════════════════════════════════════ */
+
+function taskDue(task, d){
+  const s = task.schedule;
+  if (task.snoozeUntil && task.snoozeUntil > iso(d)) return false;
+  if (task.type === "weekly"){
+    const a = s.anchors;
+    const slack = task.slack || 0;
+    return a.some(anc => {
+      const diff = (dow(d) - anc + 7) % 7;
+      if (diff > slack) return false;
+      const anchor = addD(d, -diff);
+      return !task.log.some(l => l >= iso(anchor) && l <= iso(d));
+    });
+  }
+  if (task.type === "interval"){
+    const last = task.log.length ? task.log[task.log.length-1] : null;
+    if (!last) return true;
+    return daysB(new Date(last), d) >= s.days;
+  }
+  if (task.type === "monthly"){
+    const m = d.getMonth()+1;
+    if (!s.months.includes(m)) return false;
+    const ym = d.getFullYear()+"-"+pad(m);
+    if (task.log.some(l => l.startsWith(ym))) return false;
+    // window: lastWeekOf or specific day with slack
+    if (s.lastWeekOf){
+      const lastDay = new Date(d.getFullYear(), m, 0).getDate();
+      const dayOfM  = d.getDate();
+      return dayOfM >= lastDay - 6;
+    }
+    if (s.day){
+      const dayOfM = d.getDate();
+      const slack  = task.slack || 0;
+      return dayOfM >= s.day && dayOfM <= s.day + slack;
+    }
+    return true; // hele måneden
+  }
+  return false;
+}
+
+function taskDoneToday(task, d){
+  if (task.type === "weekly"){
+    return task.log.includes(iso(d));
+  }
+  if (task.type === "interval"){
+    const last = task.log.length ? task.log[task.log.length-1] : null;
+    return last === iso(d);
+  }
+  if (task.type === "monthly"){
+    const ym = d.getFullYear()+"-"+pad(d.getMonth()+1);
+    return task.log.some(l => l.startsWith(ym));
+  }
+  return false;
+}
+
+function scheduleDesc(t){
+  const s = t.schedule;
+  if (t.type === "weekly") return s.anchors.map(a => UKEDAGER[a]).join(" + ") + (t.slack ? " · ±"+t.slack+" dag" : "");
+  if (t.type === "interval") return "hver "+s.days+". dag";
+  if (t.type === "monthly"){
+    const mStr = s.months.map(m => MND[m-1]).join(", ");
+    if (s.lastWeekOf) return "siste uka i " + mStr;
+    if (s.day) return pad(s.day)+". i " + mStr;
+    return mStr;
+  }
+  return "";
+}
+
+/* ══════════════════════════════════════════════
+   STATE
+══════════════════════════════════════════════ */
+let tasks    = [];
+let goals    = [];
+let cats     = [];
+let beredskap = { items: [], checked: {}, lastReset: null, locations: [] };
+
+let tab      = "idag";
+let editMode = false;
+let openInfo = {};
+let previewM = null;
+const SK     = "arshjul-v4";
+
+/* ══════════════════════════════════════════════
+   PERSIST
+══════════════════════════════════════════════ */
+async function load(){
+  try {
+    const r = await window.storage.get(SK);
+    if (r && r.value){
+      const d = JSON.parse(r.value);
+      tasks     = d.tasks     || [];
+      goals     = d.goals     || [];
+      cats      = d.cats      || [];
+      beredskap = d.beredskap || { items:[], checked:{}, lastReset:null, locations:[] };
+      render(); return;
+    }
+  } catch(e){}
+  // Første gang: helt tomt
+  tasks = []; goals = []; cats = [];
+  beredskap = { items:[], checked:{}, lastReset:null, locations:[] };
+  save(); render();
+}
+async function save(){
+  try { await window.storage.set(SK, JSON.stringify({tasks,goals,cats,beredskap})); } catch(e){}
+}
+
+/* ══════════════════════════════════════════════
+   SEED DATA  (eksemplene fra din beskrivelse)
+══════════════════════════════════════════════ */
+const BRANN_INFO = [
+  "Manometer: nålen skal stå i grønt felt. Rødt = mistet trykk, må til service eller byttes.",
+  "Plombering/splint: skal være intakt og uberørt.",
+  "Slange og dyse: ingen sprekker, ikke tett av støv eller insekter.",
+  "Pulverapparat: snu opp ned et par ganger slik at pulveret ikke klumper seg.",
+  "Synlig og tilgjengelig – alle vet hvor det står.",
+  "Profesjonell kontroll hvert 5. år. Pulverapparat: full service hvert 10. år.",
+  "Husk apparat både i huset og i leiligheten.",
+];
+
+function seedDemo(){
+  goals = [
+    { id:"g1", name:"Tingene mine er godt vedlikeholdte" },
+    { id:"g2", name:"Jeg har det jeg trenger" },
+    { id:"g3", name:"Jeg er fysisk aktiv" },
+    { id:"g4", name:"Jeg vet hvor tingene mine er" },
+    { id:"g5", name:"Jeg er forberedt på en krisesituasjon" },
+    { id:"g6", name:"Jeg tar vare på min egen helse" },
+    { id:"g7", name:"Jeg tar vare på familiens helse" },
+    { id:"g8", name:"Jeg har et hjem der det er lett å ta imot gjester" },
+  ];
+
+  cats = [
+    { id:"c1", name:"Vedlikehold" },
+    { id:"c2", name:"Sko",       parentId:"c1" },
+    { id:"c3", name:"Beredskap" },
+    { id:"c5", name:"Helse" },
+    { id:"c8", name:"Brannsikkerhet" },
+    { id:"c9", name:"Klær",      parentId:"c1" },
+    { id:"c10",name:"Husarbeid" },
+  ];
+
+  // Beredskapssjekklisten – lagres separat fra rutiner
+  if(!beredskap.items.length){
+    beredskap.items = [];
+    beredskap.locations = beredskap.locations || [];
+  }
+
+  tasks = [
+    {
+      id:"t1", name:"Pusse fjellskoene og sette dem på kott eller bod",
+      type:"monthly", schedule:{ months:[11], lastWeekOf:true }, slack:0,
+      mustDo:false, cats:["c2"], goals:["g1","g2","g3","g4"], log:[],
+    },
+    {
+      id:"t2", name:"Gå gjennom beredskapslista",
+      type:"monthly", schedule:{ months:[1,5,9,11], day:20 }, slack:10,
+      mustDo:true, cats:["c3"], goals:["g5","g2","g6","g7"],
+      info:["Åpne Beredskap-fanen og gå gjennom alle punktene. Fyll opp det som mangler."], log:[],
+    },
+    {
+      id:"t4",
+      name:"Se over vår-/høstjakkene, vaske og reparere dem ved behov og legge dem på kott eller bod fram til høsten",
+      type:"monthly", schedule:{ months:[5], lastWeekOf:true }, slack:0,
+      mustDo:false, cats:["c9"], goals:["g1","g2","g4"], log:[],
+    },
+    {
+      id:"t5",
+      name:"Se over vår-/høstjakkene, vaske og reparere dem ved behov og legge dem på kott eller bod fram til våren",
+      type:"monthly", schedule:{ months:[10], lastWeekOf:true }, slack:0,
+      mustDo:false, cats:["c9"], goals:["g1","g2","g4"], log:[],
+    },
+    {
+      id:"t6",
+      name:"Se over vinterjakker og vinterbukser, vaske og reparere dem ved behov og legge dem på kott eller bod fram til neste vinter",
+      type:"monthly", schedule:{ months:[4], lastWeekOf:true }, slack:0,
+      mustDo:false, cats:["c9"], goals:["g1","g2","g4"], log:[],
+    },
+    {
+      id:"t11", name:"Støvsuge",
+      type:"weekly", schedule:{ anchors:[1] }, slack:1,
+      mustDo:false, cats:["c5","c10"], goals:["g6","g7","g8"], log:[],
+    },
+    {
+      id:"t12", name:"Sjekke brannslukningsapparat",
+      type:"monthly", schedule:{ months:[1] }, slack:30,
+      mustDo:true, cats:["c8"], goals:["g5","g6","g7"], info:BRANN_INFO, log:[],
+    },
+  ];
+}
+
+/* ══════════════════════════════════════════════
+   ACTIONS
+══════════════════════════════════════════════ */
+function toggleLog(id){
+  const t = tasks.find(x=>x.id===id); if(!t) return;
+  const ti = iso(today);
+  t.log = t.log.includes(ti) ? t.log.filter(l=>l!==ti) : [...t.log,ti].sort();
+  save(); render();
+}
+function snoozeTask(id, days){
+  const t = tasks.find(x=>x.id===id); if(!t) return;
+  t.snoozeUntil = iso(addD(today, days||3));
+  save(); render();
+}
+function deleteTask(id){ tasks = tasks.filter(t=>t.id!==id); save(); render(); }
+function setTab(t){ tab=t; previewM=null; render(); }
+function setEdit(v){ editMode=v; logEditId=null; render(); }
+
+/* ── JSON eksport / import ── */
+function exportJSON(){
+  const data = JSON.stringify({tasks,goals,cats,beredskap}, null, 2);
+  const blob = new Blob([data], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'i-orden-' + iso(today) + '.json';
+  a.click();
+}
+function importJSON(){
+  const inp = document.createElement('input');
+  inp.type = 'file'; inp.accept = '.json,application/json';
+  inp.onchange = e => {
+    const file = e.target.files[0]; if(!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      try {
+        const d = JSON.parse(ev.target.result);
+        if(!d.tasks) throw new Error('Ugyldig fil');
+        if(!confirm('Dette erstatter alle eksisterende data. Fortsette?')) return;
+        tasks     = d.tasks     || [];
+        goals     = d.goals     || [];
+        cats      = d.cats      || [];
+        beredskap = d.beredskap || {items:[],checked:{},lastReset:null,locations:[]};
+        save(); render();
+      } catch(err){ alert('Kunne ikke lese filen: ' + err.message); }
+    };
+    reader.readAsText(file);
+  };
+  inp.click();
+}
+
+/* ── Logg-editor ── */
+let logEditId = null;
+
+function openLogEdit(id){ logEditId = id; render(); }
+function closeLogEdit(){ logEditId = null; render(); }
+function logAddDate(){
+  const inp = document.getElementById('log-date-inp');
+  const val = inp ? inp.value : ''; if(!val) return;
+  const t = tasks.find(x=>x.id===logEditId); if(!t) return;
+  if(!t.log.includes(val)){ t.log = [...t.log, val].sort(); }
+  save(); render();
+}
+function logRemoveDate(id, dateStr){
+  const t = tasks.find(x=>x.id===id); if(!t) return;
+  t.log = t.log.filter(l=>l!==dateStr);
+  save(); render();
+}
+function toggleInfo(id){ openInfo[id]=!openInfo[id]; render(); }
+function togglePreview(m){ previewM=(previewM===m)?null:m; render(); }
+
+/* ══════════════════════════════════════════════
+   MODAL STATE MACHINE
+   step: null | "task" | "task_edit" | "goal_new" | "goal_edit"
+         | "cat_new" | "cat_edit"
+══════════════════════════════════════════════ */
+let modal = null;
+
+function taskToForm(t){
+  return {
+    id: t.id,
+    name: t.name,
+    type: t.type,
+    anchors: t.schedule.anchors ? [...t.schedule.anchors] : [1],
+    slack: t.slack || 0,
+    days: t.schedule.days || 7,
+    months: t.schedule.months ? [...t.schedule.months] : [],
+    day: t.schedule.day || "",
+    lastWeekOf: t.schedule.lastWeekOf || false,
+    mustDo: t.mustDo || false,
+    cats: [...(t.cats||[])],
+    goals: [...(t.goals||[])],
+  };
+}
+
+function openModal(){
+  modal = {
+    step:"task",
+    form:{ name:"", type:"weekly", anchors:[1], slack:1, days:7,
+           months:[], day:"", lastWeekOf:false, mustDo:false, cats:[], goals:[] }
+  };
+  render();
+}
+function openEditTask(id){
+  const t = tasks.find(x=>x.id===id); if(!t) return;
+  modal = { step:"task_edit", form: taskToForm(t) };
+  render();
+}
+function openEditGoal(id){
+  const g = goals.find(x=>x.id===id); if(!g) return;
+  modal = { step:"goal_edit", form:{ id, name: g.name } };
+  render();
+}
+function openEditCat(id){
+  const c = cats.find(x=>x.id===id); if(!c) return;
+  modal = { step:"cat_edit", form:{ id, name: c.name, parentId: c.parentId||"" } };
+  render();
+}
+function closeModal(){ modal=null; render(); }
+
+function mf(){ return modal.form; }
+
+function setFormField(k,v){ mf()[k]=v; render(); }
+function toggleAnchor(i){ const a=mf().anchors; mf().anchors=a.includes(i)?a.filter(x=>x!==i):[...a,i].sort((x,y)=>x-y); render(); }
+function toggleMonth(m){ const a=mf().months; mf().months=a.includes(m)?a.filter(x=>x!==m):[...a,m].sort((x,y)=>x-y); render(); }
+function toggleCat(id){ const a=mf().cats; mf().cats=a.includes(id)?a.filter(x=>x!==id):[...a,id]; render(); }
+function toggleGoal(id){ const a=mf().goals; mf().goals=a.includes(id)?a.filter(x=>x!==id):[...a,id]; render(); }
+
+function openNewGoal(){ modal.step="goal_new"; modal.form._newGoal=""; render(); }
+function saveNewGoal(){
+  const name=(mf()._newGoal||"").trim(); if(!name) return;
+  const g={id:"g"+Date.now(),name};
+  goals.push(g);
+  mf().goals=[...mf().goals,g.id];
+  modal.step= modal.form.id ? "task_edit" : "task";
+  save(); render();
+}
+
+function openNewCat(){ modal.step="cat_new"; modal.form._newCat=""; modal.form._newCatParent=""; render(); }
+function saveNewCat(){
+  const name=(mf()._newCat||"").trim(); if(!name) return;
+  const parentId=mf()._newCatParent||undefined;
+  const c={id:"c"+Date.now(),name,...(parentId?{parentId}:{})};
+  cats.push(c);
+  mf().cats=[...mf().cats,c.id];
+  modal.step= modal.form.id ? "task_edit" : "task";
+  save(); render();
+}
+
+function formValid(){
+  const f=mf();
+  if(!f.name.trim()) return false;
+  if(f.type==="weekly" && !f.anchors.length) return false;
+  if(f.type==="monthly" && !f.months.length) return false;
+  if(!f.goals.length) return false;
+  return true;
+}
+
+function buildSchedule(f){
+  if(f.type==="weekly") return {anchors:f.anchors};
+  if(f.type==="interval") return {days:Math.max(1,Number(f.days)||7)};
+  const s={months:f.months};
+  if(f.lastWeekOf) s.lastWeekOf=true;
+  else if(f.day) s.day=Number(f.day);
+  return s;
+}
+
+function submitTask(){
+  if(!formValid()) return;
+  const f=mf();
+  const t={
+    id:"u"+Date.now(), name:f.name.trim(),
+    type:f.type, schedule:buildSchedule(f), slack:Number(f.slack)||0,
+    mustDo:f.mustDo, cats:f.cats, goals:f.goals, log:[],
+  };
+  tasks.push(t);
+  save(); closeModal();
+}
+
+function saveEditTask(){
+  if(!formValid()) return;
+  const f=mf();
+  const idx = tasks.findIndex(t=>t.id===f.id); if(idx<0) return;
+  const old = tasks[idx];
+  tasks[idx] = {
+    ...old,
+    name: f.name.trim(), type: f.type,
+    schedule: buildSchedule(f), slack: Number(f.slack)||0,
+    mustDo: f.mustDo, cats: f.cats, goals: f.goals,
+  };
+  save(); closeModal();
+}
+
+function saveEditGoal(){
+  const f=mf();
+  const name=f.name.trim(); if(!name) return;
+  const g=goals.find(x=>x.id===f.id); if(!g) return;
+  g.name=name; save(); closeModal();
+}
+
+function deleteGoal(id){
+  if(!confirm("Slette dette målet? Rutiner som er knyttet til det mister koblingen.")) return;
+  goals=goals.filter(g=>g.id!==id);
+  tasks.forEach(t=>{ t.goals=(t.goals||[]).filter(g=>g!==id); });
+  save(); closeModal();
+}
+
+function saveEditCat(){
+  const f=mf();
+  const name=f.name.trim(); if(!name) return;
+  const c=cats.find(x=>x.id===f.id); if(!c) return;
+  c.name=name;
+  if(f.parentId) c.parentId=f.parentId; else delete c.parentId;
+  save(); closeModal();
+}
+
+function deleteCat(id){
+  if(!confirm("Slette denne kategorien? Rutiner som er knyttet til den mister koblingen.")) return;
+  cats=cats.filter(c=>c.id!==id);
+  tasks.forEach(t=>{ t.cats=(t.cats||[]).filter(c=>c!==id); });
+  save(); closeModal();
+}
+
+/* ══════════════════════════════════════════════
+   BEREDSKAP-SJEKKLISTE
+══════════════════════════════════════════════ */
+let bAddLocs = new Set();  // selected locations when adding new item
+
+function bToggle(id){
+  beredskap.checked[id] = !beredskap.checked[id];
+  save(); render();
+}
+function bReset(){
+  beredskap.checked = {};
+  beredskap.lastReset = iso(today);
+  save(); render();
+}
+function bToggleAddLoc(loc){
+  if(bAddLocs.has(loc)) bAddLocs.delete(loc); else bAddLocs.add(loc);
+  render();
+}
+function bAddItem(){
+  const inp = document.getElementById("b-new-inp");
+  const trimmed = (inp ? inp.value : "").trim(); if(!trimmed) return;
+  const locs = bAddLocs.size ? [...bAddLocs] : (beredskap.locations.length ? [beredskap.locations[0]] : []);
+  if(!locs.length) return;
+  const ts = Date.now();
+  locs.forEach((loc, i) => {
+    beredskap.items.push({ id:"b"+(ts+i), name:trimmed, loc });
+  });
+  save(); render();
+}
+function bDeleteItem(id){
+  beredskap.items = beredskap.items.filter(x=>x.id!==id);
+  delete beredskap.checked[id];
+  save(); render();
+}
+let bNewLocInput = "";
+let bShowNewLoc = false;
+
+function bAddLocation(){
+  const trimmed = bNewLocInput.trim();
+  if(!trimmed) return;
+  if(!beredskap.locations.includes(trimmed)){
+    beredskap.locations.push(trimmed);
+    bAddLocs.add(trimmed);
+  }
+  bNewLocInput = "";
+  bShowNewLoc = false;
+  save(); render();
+}
+function bDeleteLocation(loc){
+  if(!confirm(`Slette lokasjonen «${loc}»? Punkter knyttet til den slettes også.`)) return;
+  beredskap.locations = beredskap.locations.filter(l=>l!==loc);
+  beredskap.items = beredskap.items.filter(i=>i.loc!==loc);
+  bAddLocs.delete(loc);
+  save(); render();
+}
+
+/* ══════════════════════════════════════════════
+   RENDER HELPERS
+══════════════════════════════════════════════ */
+function goalName(id){ return (goals.find(g=>g.id===id)||{}).name||""; }
+function catName(id){ return (cats.find(c=>c.id===id)||{}).name||""; }
+
+function trowHTML(t, d){
+  const done    = taskDoneToday(t, d);
+  const urgent  = t.mustDo && !done;
+  const last    = t.log.length ? t.log[t.log.length-1] : null;
+  const since   = last ? daysB(new Date(last), d) : null;
+  const metaStr = last
+    ? (since===0 ? "gjort i dag" : `sist for ${since} dag${since===1?"":"er"} siden`)
+    : "ikke gjort ennå";
+  const goals_  = (t.goals||[]).map(gid=>goalName(gid)).filter(Boolean);
+
+  return `
+<div class="${'trow'+(urgent?' urgent':'')+(done?' checked':'')}">
+  <button class="${'chk'+(done?' done':'')+(urgent?' urgent-chk':'')}"
+    aria-label="${done?"Merk som ikke gjort":"Merk som gjort"}"
+    onclick="toggleLog('${t.id}')">${done?"✓":""}</button>
+  <div class="trow-body">
+    <div class="trow-name">${esc(t.name)}</div>
+    <div class="trow-meta">${esc(scheduleDesc(t))} · ${esc(metaStr)}</div>
+    ${goals_.length ? `<div class="trow-goals">${goals_.map(g=>`<span class="goal-pill">${esc(g)}</span>`).join("")}</div>` : ""}
+  </div>
+  ${t.info?`<button class="${'info-btn '+(openInfo[t.id]?'on':'')}" onclick="toggleInfo('${t.id}')">i</button>`:""}
+  ${urgent&&!done?`<button class="snooze-btn" onclick="snoozeTask('${t.id}',3)">Utsett 3 d</button>`:""}
+  ${editMode?`<button class="edit-icon-btn" aria-label="Logg" title="Rediger logg" onclick="openLogEdit('${t.id}')">📅</button>`:""}
+  ${editMode?`<button class="edit-icon-btn" aria-label="Rediger" onclick="openEditTask('${t.id}')">✎</button>`:""}
+  ${editMode?`<button class="del-btn" onclick="deleteTask('${t.id}')">✕</button>`:""}
+</div>
+${t.info&&openInfo[t.id]?`<div class="infopanel"><ul>${t.info.map(p=>`<li>${esc(p)}</li>`).join("")}</ul></div>`:""}
+${editMode&&logEditId===t.id ? logEditorHTML(t) : ""}`;
+}
+
+function logEditorHTML(t){
+  var rows = t.log.length === 0
+    ? '<div style="font-size:13px;color:#A8BBA0;margin-bottom:8px">Ingen registreringer ennå.</div>'
+    : t.log.slice().reverse().map(function(d){
+        return '<div style="display:flex;align-items:center;justify-content:space-between;padding:4px 0;border-bottom:1px solid #DDE5DE">'
+          + '<span style="font-size:13px">' + d + '</span>'
+          + '<button data-id="' + t.id + '" data-date="' + d + '" onclick="logRemoveDate(this.dataset.id,this.dataset.date)"'
+          + ' style="font-size:11px;color:#c0392b;background:none;border:none;cursor:pointer;padding:2px 6px">Slett</button>'
+          + '</div>';
+      }).join('');
+  return '<div class="infopanel" style="padding:10px 14px 12px">'
+    + '<div style="font-size:12px;font-weight:700;color:#6B7D6F;margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em">Logg for &laquo;' + esc(t.name) + '&raquo;</div>'
+    + rows
+    + '<div style="display:flex;gap:8px;margin-top:10px">'
+    + '<input id="log-date-inp" type="date" style="flex:1;font-size:13px;padding:7px 10px;border-radius:10px;border:1.5px solid #DDE5DE;background:#F0F2ED;color:#1E2D24" max="' + iso(today) + '">'
+    + '<button onclick="logAddDate()" style="padding:8px 12px;border-radius:9px;border:none;background:#3A6648;color:#fff;font-size:13px;font-weight:600;cursor:pointer">Legg til</button>'
+    + '<button onclick="closeLogEdit()" style="padding:8px 10px;border-radius:9px;border:1.5px solid #DDE5DE;background:transparent;color:#6B7D6F;font-size:13px;cursor:pointer">Lukk</button>'
+    + '</div></div>';
+}
+
+function chip(label, on, onclick){
+  return '<button class="chip ' + (on?'on':'') + '" onclick="' + onclick + '">' + esc(label) + '</button>';
+}
+function chipNew(label, onclick){
+  return '<button class="chip-new" onclick="' + onclick + '">' + label + '</button>';
+}
+
+/* ══════════════════════════════════════════════
+   MODAL HTML
+══════════════════════════════════════════════ */
+function taskFormBody(isEdit){
+  var f = mf();
+  var roots = cats.filter(function(c){ return !c.parentId; });
+  var catSection = roots.map(function(root){
+    var kids = cats.filter(function(c){ return c.parentId===root.id; });
+    return chip(root.name, f.cats.includes(root.id), "toggleCat('"+root.id+"')")
+      + kids.map(function(k){ return chip(root.name+" / "+k.name, f.cats.includes(k.id), "toggleCat('"+k.id+"')"); }).join('');
+  }).join('') + chipNew('+ Ny kategori','openNewCat()');
+
+  var goalSection = goals.map(function(g){
+    return chip(g.name, f.goals.includes(g.id), "toggleGoal('"+g.id+"')");
+  }).join('') + chipNew('+ Nytt mål','openNewGoal()');
+
+  var valid = formValid();
+  var submitFn = isEdit ? "saveEditTask()" : "submitTask()";
+
+  var rhythmChips = '<div class="chips">'
+    + chip('Faste ukedager', f.type==='weekly',   "setFormField('type','weekly')")
+    + chip('Hver X. dag',    f.type==='interval',  "setFormField('type','interval')")
+    + chip('Måneder',        f.type==='monthly',   "setFormField('type','monthly')")
+    + '</div>';
+
+  var weeklySection = '';
+  if(f.type==='weekly'){
+    weeklySection = '<label class="field-lbl">Dager</label><div class="chips">'
+      + UKEDAGER.map(function(d,i){ return chip(d, f.anchors.includes(i), 'toggleAnchor('+i+')'); }).join('')
+      + '</div>'
+      + '<label class="field-lbl">Kan skli (dager)</label>'
+      + '<input class="inp inp-sm" type="number" min="0" max="6" value="'+f.slack+'" oninput="mf().slack=this.value">';
+  }
+
+  var intervalSection = '';
+  if(f.type==='interval'){
+    intervalSection = '<label class="field-lbl">Hver X. dag</label>'
+      + '<input class="inp inp-sm" type="number" min="1" value="'+f.days+'" oninput="mf().days=this.value">';
+  }
+
+  var monthlySection = '';
+  if(f.type==='monthly'){
+    var monthChips = '<div class="chips">'
+      + MND.map(function(m,i){ return chip(m, f.months.includes(i+1), 'toggleMonth('+(i+1)+')'); }).join('')
+      + '</div>';
+    var windowChips = '<div class="chips">'
+      + chip('Hele måneden',    !f.lastWeekOf&&!f.day, "mf().lastWeekOf=false;mf().day='';render()")
+      + chip('Siste uka',        f.lastWeekOf,          "mf().lastWeekOf=true;mf().day='';render()")
+      + chip('Fra bestemt dag', !f.lastWeekOf&&!!f.day, "mf().lastWeekOf=false;render()")
+      + '</div>';
+    var daySection = '';
+    if(!f.lastWeekOf && f.day!==''){
+      daySection = '<label class="field-lbl">Dag i måneden (f.eks. 20)</label>'
+        + '<input class="inp inp-sm" type="number" min="1" max="28" value="'+f.day+'" oninput="mf().day=this.value">'
+        + '<label class="field-lbl">Ligge inne X dager</label>'
+        + '<input class="inp inp-sm" type="number" min="0" max="31" value="'+f.slack+'" oninput="mf().slack=this.value">';
+    }
+    monthlySection = '<label class="field-lbl">Måneder</label>' + monthChips
+      + '<label class="field-lbl">Tidspunkt i måneden</label>' + windowChips + daySection;
+  }
+
+  var deleteBtn = isEdit
+    ? '<button class="del-full-btn" onclick="deleteTask(\''+f.id+'\');closeModal()">Slett rutine</button>'
+    : '';
+
+  return '<div class="modal-title">' + (isEdit?'Rediger rutine':'Ny rutine') + '</div>'
+    + '<label class="field-lbl">Hva skal gjøres?</label>'
+    + '<textarea class="inp" placeholder="Beskriv rutinen \u2026" oninput="mf().name=this.value">' + esc(f.name) + '</textarea>'
+    + '<label class="field-lbl">Rytme</label>' + rhythmChips
+    + weeklySection + intervalSection + monthlySection
+    + '<label class="field-lbl">Kategori(er)</label><div class="chips">' + catSection + '</div>'
+    + '<label class="field-lbl">Knytt til mål'
+    + (f.goals.length===0 ? ' <span style="color:#B86E2A;font-size:11px;font-weight:400;margin-left:4px">\u2013 obligatorisk</span>' : '')
+    + '</label><div class="chips">' + goalSection + '</div>'
+    + '<label class="field-lbl" style="display:flex;align-items:center;gap:8px;cursor:pointer">'
+    + '<input type="checkbox" ' + (f.mustDo?'checked':'') + ' onchange="mf().mustDo=this.checked">'
+    + ' M\u00e5 gj\u00f8res \u2013 henger til den er krysset av</label>'
+    + deleteBtn
+    + '<button class="save-btn" onclick="' + submitFn + '" ' + (valid?'':'disabled') + '>'
+    + (isEdit?'Lagre endringer':'Lagre rutine') + '</button>';
+}
+
+
+function modalHTML(){
+  if(!modal) return "";
+  var f = mf();
+  var step = modal.step;
+  var body = "";
+
+  if(step==="goal_new" || step==="goal_edit"){
+    var isEdit = step==="goal_edit";
+    var gVal = isEdit ? (f.name||"") : (f._newGoal||"");
+    var gOninput = isEdit ? "mf().name=this.value" : "mf()._newGoal=this.value";
+    var gSave = isEdit ? "saveEditGoal()" : "saveNewGoal()";
+    body = (isEdit ? "" : '<button class="step-back" onclick="modal.step=\'task\';render()">← Tilbake</button>')
+      + '<div class="modal-title">' + (isEdit?"Rediger mål":"Nytt mål") + '</div>'
+      + '<label class="field-lbl">Hva vil du oppnå?</label>'
+      + '<input class="inp" id="new-goal-inp" type="text" value="' + esc(gVal) + '"'
+      + ' placeholder="F.eks. \u00abJeg er godt forberedt\u00bb" oninput="' + gOninput + '">'
+      + (isEdit ? '<button class="del-full-btn" onclick="deleteGoal(\''+f.id+'\')">Slett mål</button>' : "")
+      + '<button class="save-btn" onclick="' + gSave + '" ' + (gVal.trim()?"":"disabled") + '>'
+      + (isEdit?"Lagre endringer":"Legg til mål") + '</button>';
+
+  } else if(step==="cat_new" || step==="cat_edit"){
+    var isEdit = step==="cat_edit";
+    var roots = cats.filter(function(c){ return !c.parentId && c.id!==(f.id||""); });
+    var parentVal = isEdit ? (f.parentId||"") : (f._newCatParent||"");
+    var cVal = isEdit ? (f.name||"") : (f._newCat||"");
+    var cOninput = isEdit ? "mf().name=this.value" : "mf()._newCat=this.value";
+    var cSave = isEdit ? "saveEditCat()" : "saveNewCat()";
+    var setNone = isEdit ? "mf().parentId='';render()" : "mf()._newCatParent='';render()";
+    var parentChips = '<button class="chip ' + (!parentVal?"on":"") + '" onclick="'+setNone+'">Ingen (toppnivå)</button>'
+      + roots.map(function(c){
+          var setThis = isEdit ? "mf().parentId='"+c.id+"';render()" : "mf()._newCatParent='"+c.id+"';render()";
+          return '<button class="chip ' + (parentVal===c.id?"on":"") + '" onclick="'+setThis+'">'+esc(c.name)+'</button>';
+        }).join("");
+    body = (isEdit ? "" : '<button class="step-back" onclick="modal.step=\'task\';render()">← Tilbake</button>')
+      + '<div class="modal-title">' + (isEdit?"Rediger kategori":"Ny kategori") + '</div>'
+      + '<label class="field-lbl">Navn</label>'
+      + '<input class="inp" type="text" value="' + esc(cVal) + '"'
+      + ' placeholder="F.eks. \u00abBil\u00bb" oninput="' + cOninput + '">'
+      + '<label class="field-lbl">Underkategori av (valgfritt)</label>'
+      + '<div class="chips">' + parentChips + '</div>'
+      + (isEdit ? '<button class="del-full-btn" onclick="deleteCat(\''+f.id+'\')">Slett kategori</button>' : "")
+      + '<button class="save-btn" onclick="' + cSave + '" ' + (cVal.trim()?"":"disabled") + '>'
+      + (isEdit?"Lagre endringer":"Legg til kategori") + '</button>';
+
+  } else {
+    body = taskFormBody(step==="task_edit");
+  }
+
+  return '<div class="modal-overlay" onclick="if(event.target===this)closeModal()">'
+    + '<div class="modal">'
+    + '<button class="close-btn" onclick="closeModal()" aria-label="Lukk">\u00d7</button>'
+    + body
+    + '</div></div>';
+}
+
+
+/* ══════════════════════════════════════════════
+   MAIN RENDER
+══════════════════════════════════════════════ */
+function render(){
+  const curM = today.getMonth()+1;
+  const monthsWithTasks = new Set(tasks.flatMap(t=>t.type==="monthly"?t.schedule.months:[]));
+
+  /* build today rows */
+  const todayRows = tasks.filter(t=>taskDue(t,today)||taskDoneToday(t,today));
+  const monthRows = tasks.filter(t=>{
+    if(t.type!=="monthly") return false;
+    if(!t.schedule.months.includes(curM)) return false;
+    const ym=today.getFullYear()+"-"+pad(curM);
+    return t.log.some(l=>l.startsWith(ym));
+  });
+
+  let html = `
+<div class="topbar">
+  <div class="topbar-row">
+    <h1>I orden</h1>
+    <div style="display:flex;gap:6px;align-items:center">
+      ${editMode?`
+        <button onclick="exportJSON()" title="Eksporter sikkerhetskopi" style="font-size:12px;font-weight:600;color:var(--muted);background:none;border:1px solid var(--line);border-radius:8px;padding:4px 8px;cursor:pointer">↓ Eksporter</button>
+        <button onclick="importJSON()" title="Importer sikkerhetskopi" style="font-size:12px;font-weight:600;color:var(--muted);background:none;border:1px solid var(--line);border-radius:8px;padding:4px 8px;cursor:pointer">↑ Importer</button>
+      `:""}
+      <button class="${'edit-btn'+(editMode?' on':'')}" onclick="setEdit(${!editMode})">${editMode?"Ferdig":"Rediger"}</button>
+    </div>
+  </div>
+  <div class="date-lbl">${UKEDAGER_FULL[dow(today)]} ${today.getDate()}. ${MND_FULL[today.getMonth()]}</div>
+  <div class="tabs">
+    ${["idag","arshjul","beredskap","kategorier","mal"].map(function(t2){ var labels={idag:"I dag",arshjul:"Årshjul",beredskap:"Beredskap",kategorier:"Kategorier",mal:"Mål"}; return '<button class="tab '+(tab===t2?"on":"")+'" onclick="setTab(\''+t2+'\')">'+labels[t2]+'</button>'; }).join("")}
+  </div>
+</div>`;
+
+  /* ── I DAG ── */
+  if(tab==="idag"){
+    html += `<div class="sec-lbl">Til i dag</div><div class="card">`;
+    if(!todayRows.length){
+      html += `<div class="empty">${tasks.length===0
+        ? "Ingen rutiner ennå. Trykk + for å legge til din første."
+        : "Ingenting på planen i dag. 🌿"}</div>`;
+    } else {
+      html += todayRows.map(t=>trowHTML(t,today)).join("");
+    }
+    html += `</div>`;
+
+    // Gjort denne måneden (denne fanen)
+    if(monthRows.length){
+      html += `<div class="sec-lbl">Gjort denne måneden</div><div class="card">`;
+      html += monthRows.map(t=>trowHTML(t,today)).join("");
+      html += `</div>`;
+    }
+  }
+
+  /* ── ÅRSHJUL ── */
+  if(tab==="arshjul"){
+    html += `<div style="height:12px"></div>`;
+    html += `<div class="wheel">`;
+    MND.forEach((m,i)=>{
+      const mi=i+1, isCur=mi===curM, isSel=previewM===mi;
+      html += `<button class="${'wbtn'+(isCur?' cur':'')+(isSel?' sel':'')}"
+        aria-label="${MND_FULL[i]}" onclick="togglePreview(${mi})">
+        ${m}<span class="${'wdot '+(monthsWithTasks.has(mi)?'on':'')}"></span></button>`;
+    });
+    html += `</div>`;
+
+    if(previewM){
+      const name = MND_FULL[previewM-1];
+      const rows = tasks.filter(t=>t.type==="monthly"&&t.schedule.months.includes(previewM));
+      html += `<div class="card" style="margin-top:8px">
+        <div class="preview-head">${name.charAt(0).toUpperCase()+name.slice(1)}</div>
+        ${rows.length===0?`<div class="empty">Ingen oppgaver i ${name}.</div>`:
+          rows.map(t=>`<div class="preview-row">
+            <span>${esc(t.name)}</span>
+            ${t.mustDo?`<span class="must-tag">må gjøres</span>`:""}
+          </div>`).join("")}
+      </div>`;
+    } else {
+      html += `<div class="empty" style="text-align:center">Trykk på en måned for å se hva som venter.</div>`;
+    }
+  }
+
+  /* ── BEREDSKAP ── */
+  if(tab==="beredskap"){
+    const locs = beredskap.locations || [];
+    const total   = beredskap.items.length;
+    const nChecked = Object.values(beredskap.checked).filter(Boolean).length;
+    const lastReset = beredskap.lastReset;
+
+    html += `<div class="sec-lbl">Beredskapsliste</div>`;
+
+    // Progress + reset
+    if(total > 0){
+      const allDone = nChecked === total;
+      html += `<div style="padding:0 12px 10px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+          <span style="font-size:13px;color:var(--muted)">${nChecked} av ${total} punkter sjekket</span>
+          ${lastReset?`<span style="font-size:11px;color:var(--sage)">nullstilt ${lastReset}</span>`:""}
+        </div>
+        <div style="height:5px;background:var(--line);border-radius:99px;overflow:hidden;margin-bottom:8px">
+          <div style="height:100%;width:${Math.round(nChecked/total*100)}%;background:var(--green);border-radius:99px"></div>
+        </div>
+        <button onclick="bReset()" style="width:100%;padding:9px 0;border-radius:10px;border:1.5px solid var(--line);background:transparent;color:${allDone?"var(--green)":"var(--muted)"};font-size:13px;font-weight:600;cursor:pointer">
+          ${allDone?"✓ Alle sjekket – nullstill til neste runde":"Nullstill avkryssinger"}
+        </button>
+      </div>`;
+    }
+
+    // Columns
+    if(!locs.length){
+      html += `<div class="empty">Ingen lokasjoner ennå. Legg til en lokasjon nedenfor.</div>`;
+    } else {
+      html += `<div style="display:grid;grid-template-columns:repeat(${Math.min(locs.length,3)},1fr);gap:8px;padding:0 12px">`;
+      locs.forEach(loc=>{
+        const locItems = beredskap.items.filter(i=>i.loc===loc);
+        const locChecked = locItems.filter(i=>beredskap.checked[i.id]).length;
+        html += `<div style="background:var(--card);border-radius:12px;overflow:hidden;border:1px solid var(--line)">
+          <div style="padding:9px 12px 6px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line)">
+            <span style="font-size:12px;font-weight:700;color:var(--ink)">${esc(loc)}</span>
+            <span style="font-size:11px;color:var(--sage)">${locChecked}/${locItems.length}</span>
+          </div>`;
+        if(!locItems.length){
+          html += `<div style="padding:10px 12px;font-size:12px;color:var(--sage);font-style:italic">Tom</div>`;
+        } else {
+          locItems.forEach(item=>{
+            const on = !!beredskap.checked[item.id];
+            html += `<div style="display:flex;align-items:flex-start;gap:8px;padding:8px 10px;border-bottom:1px solid var(--line);${on?"opacity:.55":""}">
+              <button class="${'chk'+(on?' done':'')}" style="width:20px;height:20px;border-radius:5px;flex-shrink:0;margin-top:1px" onclick="bToggle('${item.id}')">${on?"✓":""}</button>
+              <span style="font-size:13px;flex:1;line-height:1.4;${on?"text-decoration:line-through;color:var(--muted)":""}">${esc(item.name)}</span>
+              ${editMode?`<button class="del-btn" style="font-size:12px" onclick="bDeleteItem('${item.id}')">✕</button>`:""}
+            </div>`;
+          });
+        }
+        html += `${editMode?`<button data-loc="${esc(loc)}" onclick="bDeleteLocation(this.dataset.loc)" style="width:100%;padding:7px 0;border:none;background:none;color:#c0392b;font-size:12px;font-weight:600;cursor:pointer">Slett lokasjon</button>`:""}
+        </div>`;
+      });
+      html += `</div>`;
+    }
+
+    // Add new item
+    if(locs.length){
+      html += `<div style="margin:10px 12px 0;background:var(--card);border-radius:12px;border:1px solid var(--line);padding:12px">
+        <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">Legg til punkt</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">
+        <div style="font-size:11px;color:var(--sage);margin-bottom:4px">Velg én eller flere lokasjoner</div>${locs.map(l=>'<button data-loc="'+esc(l)+'" onclick="bToggleAddLoc(this.dataset.loc)" class="chip '+(bAddLocs.has(l)?'on':'')+'" style="font-size:12px;padding:4px 10px">'+esc(l)+'</button>').join("")}
+        </div>
+        <div style="display:flex;gap:8px">
+          <input id="b-new-inp" class="inp" type="text" placeholder="Hva skal være på lager?" style="flex:1;font-size:14px" onkeydown="if(event.key==='Enter')bAddItem()">
+          <button onclick="bAddItem()" style="padding:10px 14px;border-radius:10px;border:none;background:var(--green);color:#fff;font-size:16px;font-weight:700;cursor:pointer">+</button>
+        </div>
+      </div>`;
+    }
+
+    // Add location
+    html += `<div style="margin:8px 12px 0;background:var(--card);border-radius:12px;border:1.5px dashed var(--sage);overflow:hidden">`;
+    if(!bShowNewLoc){
+      html += `<button onclick="bShowNewLoc=true;render()" style="width:100%;padding:11px 0;border:none;background:transparent;color:var(--muted);font-size:13px;font-weight:600;cursor:pointer">+ Ny lokasjon</button>`;
+    } else {
+      html += `<div style="display:flex;gap:8px;padding:10px">
+        <input id="b-loc-inp" class="inp" type="text" placeholder="Navn på lokasjon …"
+          style="flex:1;font-size:14px"
+          oninput="bNewLocInput=this.value"
+          onkeydown="if(event.key==='Enter')bAddLocation();if(event.key==='Escape'){bShowNewLoc=false;render();}">
+        <button onclick="bAddLocation()" style="padding:10px 14px;border-radius:10px;border:none;background:var(--green);color:#fff;font-size:15px;font-weight:700;cursor:pointer">+</button>
+        <button onclick="bShowNewLoc=false;render()" style="padding:10px 12px;border-radius:10px;border:1.5px solid var(--line);background:transparent;color:var(--muted);font-size:13px;cursor:pointer">Avbryt</button>
+      </div>`;
+    }
+    html += `</div>`;
+  }
+
+  /* ── KATEGORIER ── */
+  if(tab==="kategorier"){
+    const roots = cats.filter(c=>!c.parentId);
+    if(!roots.length){
+      html += `<div class="empty">Ingen kategorier ennå. Legg til en rutine for å opprette kategorier.</div>`;
+    } else {
+      roots.forEach(root=>{
+        const kids = cats.filter(c=>c.parentId===root.id);
+        const rootTasks = tasks.filter(t=>t.cats.includes(root.id));
+        const allCatIds = [root.id, ...kids.map(k=>k.id)];
+        const anyTask = tasks.some(t=>t.cats.some(c=>allCatIds.includes(c)));
+        if(!anyTask) return;
+
+        html += `<div class="sec-lbl">${esc(root.name)}${editMode?` <button class="edit-icon-btn" style="font-size:12px" aria-label="Rediger kategori" onclick="openEditCat('${root.id}')">✎</button>`:""}</div>`;
+
+        if(rootTasks.length){
+          html += `<div class="card">${rootTasks.map(t=>trowHTML(t,today)).join("")}</div>`;
+        }
+
+        kids.forEach(kid=>{
+          const kidTasks = tasks.filter(t=>t.cats.includes(kid.id));
+          if(!kidTasks.length) return;
+          html += `<div class="card" style="margin-top:4px">
+            <div class="subcat-lbl">${esc(kid.name)}${editMode?` <button class="edit-icon-btn" style="font-size:12px" aria-label="Rediger underkategori" onclick="openEditCat('${kid.id}')">✎</button>`:""}</div>
+            ${kidTasks.map(t=>trowHTML(t,today)).join("")}
+          </div>`;
+        });
+      });
+    }
+  }
+
+  /* ── MÅL ── */
+  if(tab==="mal"){
+    if(!goals.length){
+      html += `<div class="empty">Ingen mål ennå. De opprettes når du legger til rutiner.</div>`;
+    } else {
+      goals.forEach(g=>{
+        const linked = tasks.filter(t=>(t.goals||[]).includes(g.id));
+        html += `<div class="goal-card">
+          <div class="goal-head">
+            <div class="goal-name">${esc(g.name)}</div>
+            ${editMode?`<button class="edit-icon-btn" aria-label="Rediger mål" onclick="openEditGoal('${g.id}')">✎</button>`:""}
+          </div>`;
+        if(linked.length){
+          html += `<div class="goal-tasks">`;
+          linked.forEach(t=>{
+            html += `<div class="goal-task-item">· ${esc(t.name)}</div>`;
+          });
+          html += `</div>`;
+        } else {
+          html += `<div class="goal-tasks"><div class="goal-task-item" style="font-style:italic">Ingen rutiner knyttet til dette målet ennå.</div></div>`;
+        }
+        html += `</div>`;
+      });
+    }
+  }
+
+  // FAB + modal
+  html += `<button class="fab" onclick="openModal()" aria-label="Legg til rutine">+</button>`;
+  html += modalHTML();
+
+  document.getElementById("app").innerHTML = html;
+
+  // autofokus på input i modalen
+  const ai = document.querySelector(".modal textarea");
+  if(ai && !ai.value) ai.focus();
+  const gi = document.getElementById("new-goal-inp");
+  if(gi) gi.focus();
+  const li = document.getElementById("b-loc-inp");
+  if(li){ li.focus(); li.value = bNewLocInput; }
+}
+
+load();
+</script>
+</body>
+</html>
