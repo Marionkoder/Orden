@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>I orden</title>
+<link rel="manifest" id="pwa-manifest">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="I orden">
+<meta name="theme-color" content="#3A6648">
+<link rel="apple-touch-icon" href="ikon.svg">
+<link rel="icon" type="image/svg+xml" href="ikon.svg">
+<script>
+(function(){
+  var m={name:"I orden",short_name:"I orden",description:"Hold orden på rutiner og vaner",
+    start_url:".",display:"standalone",background_color:"#F0F2ED",theme_color:"#3A6648",
+    icons:[
+      {src:"ikon.svg",sizes:"192x192",type:"image/svg+xml"},
+      {src:"ikon.svg",sizes:"512x512",type:"image/svg+xml",purpose:"any maskable"}
+    ]};
+  var b=new Blob([JSON.stringify(m)],{type:"application/manifest+json"});
+  document.getElementById("pwa-manifest").href=URL.createObjectURL(b);
+})();
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#F0F2ED;--card:#FFFFFF;--ink:#1E2D24;--green:#3A6648;--green-mid:#5A8C6A;
+  --green-soft:#E3EDE6;--sage:#A8BBA0;--amber:#B86E2A;--amber-soft:#F5E8D8;
+  --muted:#6B7D6F;--line:#DDE5DE;
+}
+body{background:var(--bg);color:var(--ink);font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:15px;line-height:1.5;min-height:100vh}
+.shell{max-width:580px;margin:0 auto;padding:0 0 80px}
+.topbar{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--line);padding:14px 18px 0}
+.topbar-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+h1{font-size:20px;font-weight:700;letter-spacing:-0.02em}
+.topbar-right{display:flex;gap:6px;align-items:center}
+.icon-btn{font-size:13px;font-weight:600;color:var(--muted);background:none;border:1px solid var(--line);border-radius:8px;padding:4px 9px;cursor:pointer}
+.edit-btn{font-size:13px;font-weight:600;color:var(--muted);background:none;border:none;cursor:pointer}
+.edit-btn.on{color:var(--green)}
+.date-lbl{font-size:13px;color:var(--muted);margin-bottom:10px}
+.tabs{display:flex;gap:2px}
+.tab{flex:1;padding:8px 0;border:none;background:none;cursor:pointer;font-size:12px;font-weight:600;color:var(--muted);border-bottom:2px solid transparent}
+.tab.on{color:var(--green);border-bottom-color:var(--green)}
+.sec-lbl{font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--sage);padding:18px 18px 6px}
+.card{background:var(--card);border-radius:14px;overflow:hidden;margin:0 12px 4px}
+.trow{display:flex;align-items:flex-start;gap:10px;padding:11px 12px;border-bottom:1px solid var(--line)}
+.trow:last-child{border-bottom:none}
+.trow.urgent{background:var(--amber-soft)}
+.chk{width:24px;height:24px;border-radius:7px;flex-shrink:0;margin-top:1px;border:2px solid var(--line);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;color:transparent;transition:background .12s,border-color .12s}
+.chk.urgent-chk{border-color:var(--amber)}
+.chk.done{border-color:var(--green);background:var(--green);color:#fff}
+.trow-body{flex:1;min-width:0}
+.trow-name{font-size:14px;font-weight:500}
+.trow.checked .trow-name{color:var(--muted);text-decoration:line-through}
+.trow-meta{font-size:12px;color:var(--muted);margin-top:2px}
+.trow-goals{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}
+.goal-pill{font-size:11px;color:var(--green);background:var(--green-soft);padding:2px 7px;border-radius:99px}
+.snooze-btn{font-size:11px;color:var(--muted);background:none;border:1px solid var(--line);border-radius:8px;padding:3px 7px;cursor:pointer;white-space:nowrap;align-self:center;flex-shrink:0}
+.del-btn{font-size:13px;color:#c0392b;background:none;border:none;cursor:pointer;padding:2px 4px;align-self:center}
+.edit-icon-btn{font-size:14px;color:var(--muted);background:none;border:none;cursor:pointer;padding:2px 4px;align-self:center;opacity:.7}
+.edit-icon-btn:hover{opacity:1;color:var(--green)}
+.info-btn{width:20px;height:20px;border-radius:99px;border:1.5px solid var(--line);background:none;color:var(--muted);font-size:11px;font-style:italic;font-family:Georgia,serif;cursor:pointer;flex-shrink:0;align-self:center;display:flex;align-items:center;justify-content:center}
+.info-btn.on{border-color:var(--green);color:var(--green);background:var(--green-soft)}
+.infopanel{padding:6px 12px 12px 46px;border-bottom:1px solid var(--line);background:#F7FAF7}
+.infopanel ul{padding-left:16px}
+.infopanel li{font-size:13px;color:var(--ink);line-height:1.6;margin-bottom:2px}
+.empty{padding:18px;font-size:14px;color:var(--muted);line-height:1.6}
+.wheel{display:grid;grid-template-columns:repeat(12,1fr);gap:3px;margin:0 12px 4px;padding:10px 6px;background:var(--card);border-radius:12px}
+.wbtn{background:transparent;border:none;border-radius:7px;padding:5px 0 3px;font-size:11px;font-weight:500;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--ink)}
+.wbtn.cur{background:var(--green);color:#fff;font-weight:700}
+.wbtn.sel{background:var(--green-soft)}
+.wdot{width:4px;height:4px;border-radius:99px;background:transparent}
+.wdot.on{background:var(--amber)}
+.wbtn.cur .wdot{background:#fff!important}
+.preview-head{padding:10px 14px;font-size:13px;font-weight:600;color:var(--muted);border-bottom:1px solid var(--line)}
+.preview-row{display:flex;justify-content:space-between;align-items:center;padding:9px 14px;font-size:14px;border-bottom:1px solid var(--line)}
+.preview-row:last-child{border-bottom:none}
+.must-tag{font-size:11px;color:var(--amber);font-weight:600}
+.subcat-lbl{font-size:11px;font-weight:600;color:var(--sage);padding:10px 14px 4px;letter-spacing:.06em;text-transform:uppercase}
+.goal-card{margin:0 12px 8px;background:var(--card);border-radius:14px;overflow:hidden}
+.goal-head{display:flex;align-items:center;justify-content:space-between;padding:14px}
+.goal-name{font-size:15px;font-weight:600}
+.goal-tasks{padding:0 14px 10px}
+.goal-task-item{font-size:13px;color:var(--muted);padding:4px 0;border-bottom:1px solid var(--line)}
+.goal-task-item:last-child{border-bottom:none}
+.fab{position:fixed;bottom:24px;right:24px;width:52px;height:52px;border-radius:99px;background:var(--green);color:#fff;border:none;font-size:26px;cursor:pointer;box-shadow:0 3px 12px rgba(0,0,0,.18);display:flex;align-items:center;justify-content:center;transition:transform .1s}
+.fab:active{transform:scale(.92)}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.32);display:flex;align-items:flex-end;justify-content:center;z-index:200}
+.modal{background:var(--card);border-radius:20px 20px 0 0;width:100%;max-width:580px;max-height:92vh;overflow-y:auto;padding:20px 18px 32px}
+.modal-title{font-size:18px;font-weight:700;margin-bottom:16px}
+.close-btn{float:right;background:none;border:none;font-size:22px;cursor:pointer;color:var(--muted);margin-top:-4px}
+.step-back{background:none;border:none;color:var(--muted);cursor:pointer;font-size:13px;margin-bottom:8px;display:block}
+.field-lbl{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;display:block;margin:16px 0 6px}
+.inp{width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid var(--line);font-size:15px;background:var(--bg);color:var(--ink);font-family:inherit}
+.inp:focus{outline:none;border-color:var(--green)}
+.inp-sm{width:80px}
+textarea.inp{min-height:70px;resize:vertical}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.chip{padding:6px 12px;border-radius:99px;font-size:13px;cursor:pointer;border:1.5px solid var(--line);background:var(--card);color:var(--ink);white-space:nowrap;font-family:inherit}
+.chip.on{border-color:var(--green);background:var(--green-soft);color:var(--green);font-weight:600}
+.chip-new{padding:6px 12px;border-radius:99px;font-size:13px;cursor:pointer;border:1.5px dashed var(--sage);background:transparent;color:var(--muted);font-family:inherit}
+.chip-new:hover{border-color:var(--green);color:var(--green)}
+.save-btn{width:100%;margin-top:18px;padding:13px 0;border-radius:12px;border:none;background:var(--green);color:#fff;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit}
+.save-btn:disabled{background:#C0CDBC;cursor:default}
+.del-full-btn{display:block;width:100%;margin-top:10px;padding:11px 0;border-radius:12px;border:1.5px solid #c0392b;background:transparent;color:#c0392b;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit}
+.warn{font-size:13px;color:var(--amber);margin-top:6px}
+@media(max-width:480px){
+  body{font-size:13px}
+  h1{font-size:17px}
+  .date-lbl,.edit-btn,.icon-btn{font-size:11px}
+  .tab{font-size:10px;padding:7px 0}
+  .sec-lbl{font-size:10px;padding:14px 14px 5px}
+  .trow{padding:9px 10px;gap:8px}
+  .trow-name{font-size:13px}
+  .trow-meta{font-size:11px}
+  .chk{width:22px;height:22px}
+  .card{margin:0 8px 4px}
+  .wheel{margin:0 8px 4px;padding:8px 4px}
+  .wbtn{font-size:10px}
+  .goal-card{margin:0 8px 8px}
+  .goal-name{font-size:13px}
+  .fab{width:46px;height:46px;font-size:22px;bottom:18px;right:16px}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="shell" id="app"><div class="empty">Laster …</div></div>
+<script>
+'use strict';
+/* ── Utils ── */
+var DAY=86400000;
+function norm(d){var x=new Date(d);x.setHours(0,0,0,0);return x;}
+function iso(d){var x=norm(d);return x.getFullYear()+'-'+pad(x.getMonth()+1)+'-'+pad(x.getDate());}
+function pad(n){return String(n).padStart(2,'0');}
+function daysB(a,b){return Math.round((norm(b)-norm(a))/DAY);}
+function addD(d,n){return new Date(norm(d).getTime()+n*DAY);}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function q(s){return String(s).replace(/'/g,'\\x27');}  // safe for single-quoted attrs
+
+var UKEDAGER=['man','tir','ons','tor','fre','lør','søn'];
+var UKEDAGER_FULL=['mandag','tirsdag','onsdag','torsdag','fredag','lørdag','søndag'];
+var MND=['jan','feb','mar','apr','mai','jun','jul','aug','sep','okt','nov','des'];
+var MND_FULL=['januar','februar','mars','april','mai','juni','juli','august','september','oktober','november','desember'];
+function dow(d){return(norm(d).getDay()+6)%7;}
+var today=norm(new Date());
+
+/* ── Schedule logic ── */
+function taskDue(task,d){
+  var s=task.schedule;
+  if(task.snoozeUntil&&task.snoozeUntil>iso(d))return false;
+  if(task.type==='weekly'){
+    return s.anchors.some(function(anc){
+      var diff=(dow(d)-anc+7)%7;
+      if(diff>(task.slack||0))return false;
+      var anchor=addD(d,-diff);
+      return!task.log.some(function(l){return l>=iso(anchor)&&l<=iso(d);});
+    });
+  }
+  if(task.type==='interval'){
+    var last=task.log.length?task.log[task.log.length-1]:null;
+    return!last||daysB(new Date(last),d)>=s.days;
+  }
+  if(task.type==='monthly'){
+    var m=d.getMonth()+1;
+    if(!s.months.includes(m))return false;
+    var ym=d.getFullYear()+'-'+pad(m);
+    if(task.log.some(function(l){return l.startsWith(ym);}))return false;
+    if(s.lastWeekOf){var ld=new Date(d.getFullYear(),m,0).getDate();return d.getDate()>=ld-6;}
+    if(s.day){var dd=d.getDate();return dd>=s.day&&dd<=s.day+(task.slack||0);}
+    return true;
+  }
+  return false;
+}
+function taskDoneToday(task,d){
+  if(task.type==='weekly')return task.log.includes(iso(d));
+  if(task.type==='interval'){var l=task.log.length?task.log[task.log.length-1]:null;return l===iso(d);}
+  if(task.type==='monthly'){var ym=d.getFullYear()+'-'+pad(d.getMonth()+1);return task.log.some(function(l){return l.startsWith(ym);});}
+  return false;
+}
+function scheduleDesc(t){
+  var s=t.schedule;
+  if(t.type==='weekly')return s.anchors.map(function(a){return UKEDAGER[a];}).join(' + ')+(t.slack?' · ±'+t.slack+' dag':'');
+  if(t.type==='interval')return 'hver '+s.days+'. dag';
+  if(t.type==='monthly'){
+    var ms=s.months.map(function(m){return MND[m-1];}).join(', ');
+    if(s.lastWeekOf)return 'siste uka i '+ms;
+    if(s.day)return pad(s.day)+'. i '+ms;
+    return ms;
+  }
+  return '';
+}
+
+/* ── State ── */
+var tasks=[], goals=[], cats=[];
+var beredskap={items:[],checked:{},lastReset:null,locations:[],locCats:[]};
+var tab='idag', editMode=false, openInfo={}, previewM=null;
+var logEditId=null;
+var modal=null;  // {step, form}
+var bShowNewLoc=false, bNewLocInput='';
+var bAddLocs=[];  // selected locs for new beredskap item
+var bShowNewLocCat=false, bNewLocCatInput='';
+
+var SK='i-orden-v5';
+
+/* ── Persist ── */
+async function load(){
+  try{
+    var r=await window.storage.get(SK);
+    if(r&&r.value){
+      var d=JSON.parse(r.value);
+      tasks=d.tasks||[];goals=d.goals||[];cats=d.cats||[];
+      beredskap=Object.assign({items:[],checked:{},lastReset:null,locations:[],locCats:[]},d.beredskap||{});
+      render();return;
+    }
+  }catch(e){}
+  tasks=[];goals=[];cats=[];
+  beredskap={items:[],checked:{},lastReset:null,locations:[],locCats:[]};
+  save();render();
+}
+async function save(){
+  try{await window.storage.set(SK,JSON.stringify({tasks,goals,cats,beredskap}));}catch(e){}
+}
+
+/* ── Task actions ── */
+function toggleLog(id){
+  var t=tasks.find(function(x){return x.id===id;});if(!t)return;
+  var ti=iso(today);
+  t.log=t.log.includes(ti)?t.log.filter(function(l){return l!==ti;}):[].concat(t.log,[ti]).sort();
+  save();render();
+}
+function snoozeTask(id,days){
+  var t=tasks.find(function(x){return x.id===id;});if(!t)return;
+  t.snoozeUntil=iso(addD(today,days||3));save();render();
+}
+function deleteTask(id){tasks=tasks.filter(function(t){return t.id!==id;});save();render();}
+
+/* ── Log editor ── */
+function openLogEdit(id){logEditId=id;render();}
+function closeLogEdit(){logEditId=null;render();}
+function logAddDate(){
+  var inp=document.getElementById('log-date-inp');
+  var val=inp?inp.value:'';if(!val)return;
+  var t=tasks.find(function(x){return x.id===logEditId;});if(!t)return;
+  if(!t.log.includes(val)){t.log=[].concat(t.log,[val]).sort();}
+  save();render();
+}
+function logRemoveDate(id,dateStr){
+  var t=tasks.find(function(x){return x.id===id;});if(!t)return;
+  t.log=t.log.filter(function(l){return l!==dateStr;});
+  save();render();
+}
+
+/* ── UI state ── */
+function setTab(t){tab=t;previewM=null;render();}
+function setEdit(v){editMode=v;logEditId=null;render();}
+function toggleInfo(id){openInfo[id]=!openInfo[id];render();}
+function togglePreview(m){previewM=(previewM===m)?null:m;render();}
+
+/* ── Export / Import ── */
+function exportJSON(){
+  var data=JSON.stringify({tasks:tasks,goals:goals,cats:cats,beredskap:beredskap},null,2);
+  var blob=new Blob([data],{type:'application/json'});
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='i-orden-'+iso(today)+'.json';
+  a.click();
+}
+function importJSON(){
+  var inp=document.createElement('input');
+  inp.type='file';inp.accept='.json,application/json';
+  inp.onchange=function(e){
+    var file=e.target.files[0];if(!file)return;
+    var reader=new FileReader();
+    reader.onload=function(ev){
+      try{
+        var d=JSON.parse(ev.target.result);
+        if(!d.tasks)throw new Error('Ugyldig fil');
+        tasks=d.tasks||[];goals=d.goals||[];cats=d.cats||[];
+        beredskap=Object.assign({items:[],checked:{},lastReset:null,locations:[],locCats:[]},d.beredskap||{});
+        save();render();
+      }catch(err){alert('Kunne ikke lese filen: '+err.message);}
+    };
+    reader.readAsText(file);
+  };
+  inp.click();
+}
+
+/* ── Modal ── */
+function openModal(){
+  modal={step:'task',src:'new',
+    form:{name:'',type:'weekly',anchors:[1],slack:1,days:7,months:[],day:'',lastWeekOf:false,mustDo:false,cats:[],goals:[]}};
+  render();
+}
+function closeModal(){modal=null;render();}
+function mf(){return modal.form;}
+
+/* Form helpers */
+function setFormType(t){mf().type=t;render();}
+function toggleAnchor(i){var a=mf().anchors;mf().anchors=a.includes(i)?a.filter(function(x){return x!==i;}):[].concat(a,[i]).sort(function(x,y){return x-y;});render();}
+function toggleMonth(m){var a=mf().months;mf().months=a.includes(m)?a.filter(function(x){return x!==m;}):[].concat(a,[m]).sort(function(x,y){return x-y;});render();}
+function toggleCat(id){var a=mf().cats;mf().cats=a.includes(id)?a.filter(function(x){return x!==id;}):[].concat(a,[id]);render();}
+function toggleGoal(id){var a=mf().goals;mf().goals=a.includes(id)?a.filter(function(x){return x!==id;}):[].concat(a,[id]);render();}
+
+function openNewGoal(){modal.step='goal_new';render();}
+function backToTask(){modal.step=modal.src==='edit'?'task_edit':'task';render();}
+function saveNewGoal(){
+  var name=(mf()._newGoal||'').trim();if(!name)return;
+  var g={id:'g'+Date.now(),name:name};
+  goals.push(g);
+  mf().goals=[].concat(mf().goals,[g.id]);
+  mf()._newGoal='';
+  backToTask();save();
+}
+function openNewCat(){modal.step='cat_new';render();}
+function saveNewCat(){
+  var name=(mf()._newCat||'').trim();if(!name)return;
+  var parentId=mf()._newCatParent||undefined;
+  var c={id:'c'+Date.now(),name:name};
+  if(parentId)c.parentId=parentId;
+  cats.push(c);
+  mf().cats=[].concat(mf().cats,[c.id]);
+  mf()._newCat='';mf()._newCatParent='';
+  backToTask();save();
+}
+
+function formValid(){
+  var f=mf();
+  if(!f.name.trim())return false;
+  if(f.type==='weekly'&&!f.anchors.length)return false;
+  if(f.type==='monthly'&&!f.months.length)return false;
+  if(!f.goals.length)return false;
+  return true;
+}
+function buildSchedule(f){
+  if(f.type==='weekly')return{anchors:f.anchors};
+  if(f.type==='interval')return{days:Math.max(1,Number(f.days)||7)};
+  var s={months:f.months};
+  if(f.lastWeekOf)s.lastWeekOf=true;
+  else if(f.day)s.day=Number(f.day);
+  return s;
+}
+function submitTask(){
+  if(!formValid())return;
+  var f=mf();
+  tasks.push({id:'u'+Date.now(),name:f.name.trim(),type:f.type,
+    schedule:buildSchedule(f),slack:Number(f.slack)||0,
+    mustDo:f.mustDo,cats:f.cats,goals:f.goals,log:[]});
+  save();closeModal();
+}
+
+/* Edit existing */
+function openEditTask(id){
+  var t=tasks.find(function(x){return x.id===id;});if(!t)return;
+  var s=t.schedule;
+  modal={step:'task_edit',src:'edit',form:{
+    id:t.id,name:t.name,type:t.type,
+    anchors:s.anchors?[].concat(s.anchors):[1],
+    slack:t.slack||0,days:s.days||7,
+    months:s.months?[].concat(s.months):[],
+    day:s.day||'',lastWeekOf:s.lastWeekOf||false,
+    mustDo:t.mustDo||false,cats:[].concat(t.cats||[]),goals:[].concat(t.goals||[])
+  }};
+  render();
+}
+function saveEditTask(){
+  if(!formValid())return;
+  var f=mf();
+  var idx=tasks.findIndex(function(t){return t.id===f.id;});if(idx<0)return;
+  var old=tasks[idx];
+  tasks[idx]=Object.assign({},old,{
+    name:f.name.trim(),type:f.type,schedule:buildSchedule(f),
+    slack:Number(f.slack)||0,mustDo:f.mustDo,cats:f.cats,goals:f.goals
+  });
+  save();closeModal();
+}
+
+function openEditGoal(id){
+  var g=goals.find(function(x){return x.id===id;});if(!g)return;
+  modal={step:'goal_edit',src:'direct',form:{id:id,name:g.name}};render();
+}
+function saveEditGoal(){
+  var f=mf();var name=f.name.trim();if(!name)return;
+  var g=goals.find(function(x){return x.id===f.id;});if(!g)return;
+  g.name=name;save();closeModal();
+}
+function deleteGoal(id){
+  goals=goals.filter(function(g){return g.id!==id;});
+  tasks.forEach(function(t){t.goals=(t.goals||[]).filter(function(g){return g!==id;});});
+  save();closeModal();
+}
+
+function openEditCat(id){
+  var c=cats.find(function(x){return x.id===id;});if(!c)return;
+  modal={step:'cat_edit',src:'direct',form:{id:id,name:c.name,parentId:c.parentId||''}};render();
+}
+function saveEditCat(){
+  var f=mf();var name=f.name.trim();if(!name)return;
+  var c=cats.find(function(x){return x.id===f.id;});if(!c)return;
+  c.name=name;
+  if(f.parentId)c.parentId=f.parentId;else delete c.parentId;
+  save();closeModal();
+}
+function deleteCat(id){
+  cats=cats.filter(function(c){return c.id!==id;});
+  tasks.forEach(function(t){t.cats=(t.cats||[]).filter(function(c){return c!==id;});});
+  save();closeModal();
+}
+
+/* ── Beredskap ── */
+function bToggle(id){beredskap.checked[id]=!beredskap.checked[id];save();render();}
+function bReset(){beredskap.checked={};beredskap.lastReset=iso(today);save();render();}
+function bToggleAddLoc(loc){
+  bAddLocs=bAddLocs.includes(loc)?bAddLocs.filter(function(l){return l!==loc;}):[].concat(bAddLocs,[loc]);
+  render();
+}
+function bAddItem(){
+  var inp=document.getElementById('b-new-inp');
+  var name=(inp?inp.value:'').trim();if(!name)return;
+  var locs=bAddLocs.length?bAddLocs:(beredskap.locations.length?[beredskap.locations[0]]:[]);
+  if(!locs.length)return;
+  var ts=Date.now();
+  var cat=document.getElementById('b-cat-sel')?document.getElementById('b-cat-sel').value:'';
+  locs.forEach(function(loc,i){beredskap.items.push({id:'b'+(ts+i),name:name,loc:loc,cat:cat});});
+  save();render();
+}
+function bDeleteItem(id){
+  beredskap.items=beredskap.items.filter(function(x){return x.id!==id;});
+  delete beredskap.checked[id];save();render();
+}
+function bAddLocation(){
+  var t=bNewLocInput.trim();if(!t)return;
+  if(!beredskap.locations.includes(t)){beredskap.locations.push(t);bAddLocs=[t];}
+  bNewLocInput='';bShowNewLoc=false;save();render();
+}
+function bDeleteLocation(loc){
+
+  beredskap.locations=beredskap.locations.filter(function(l){return l!==loc;});
+  beredskap.items=beredskap.items.filter(function(i){return i.loc!==loc;});
+  bAddLocs=bAddLocs.filter(function(l){return l!==loc;});
+  save();render();
+}
+function bAddLocCat(){
+  var t=bNewLocCatInput.trim();if(!t)return;
+  if(!beredskap.locCats.includes(t))beredskap.locCats.push(t);
+  bNewLocCatInput='';bShowNewLocCat=false;save();render();
+}
+function bDeleteLocCat(cat){
+
+  beredskap.locCats=beredskap.locCats.filter(function(c){return c!==cat;});
+  beredskap.items.forEach(function(i){if(i.cat===cat)i.cat='';});
+  save();render();
+}
+
+/* ── HTML builders ── */
+function gn(id){var g=goals.find(function(x){return x.id===id;});return g?g.name:'';}
+
+function chip(label,on,fn){
+  return '<button class="chip'+(on?' on':'')+'" onclick="'+fn+'">'+esc(label)+'</button>';
+}
+function chipNew(label,fn){
+  return '<button class="chip-new" onclick="'+fn+'">'+label+'</button>';
+}
+
+function trowHTML(t,d){
+  var done=taskDoneToday(t,d);
+  var urgent=t.mustDo&&!done;
+  var last=t.log.length?t.log[t.log.length-1]:null;
+  var since=last?daysB(new Date(last),d):null;
+  var meta=last?(since===0?'gjort i dag':'sist for '+since+(since===1?' dag':' dager')+' siden'):'ikke gjort ennå';
+  var gnames=(t.goals||[]).map(gn).filter(Boolean);
+  var pills=gnames.length?'<div class="trow-goals">'+gnames.map(function(g){return '<span class="goal-pill">'+esc(g)+'</span>';}).join('')+'</div>':'';
+  var cls='trow'+(urgent?' urgent':'')+(done?' checked':'');
+  var chkCls='chk'+(done?' done':'')+(urgent?' urgent-chk':'');
+  var infoBtnCls='info-btn'+(openInfo[t.id]?' on':'');
+  var h='<div class="'+cls+'">'
+    +'<button class="'+chkCls+'" aria-label="'+(done?'Merk som ikke gjort':'Merk som gjort')+'" onclick="toggleLog(\''+q(t.id)+'\')">'+(done?'✓':'')+'</button>'
+    +'<div class="trow-body"><div class="trow-name">'+esc(t.name)+'</div>'
+    +'<div class="trow-meta">'+esc(scheduleDesc(t))+' · '+esc(meta)+'</div>'
+    +pills+'</div>';
+  if(t.info)h+='<button class="'+infoBtnCls+'" onclick="toggleInfo(\''+q(t.id)+'\')">i</button>';
+  if(urgent&&!done)h+='<button class="snooze-btn" onclick="snoozeTask(\''+q(t.id)+'\',3)">Utsett 3 d</button>';
+  if(editMode){
+    h+='<button class="edit-icon-btn" title="Rediger logg" onclick="openLogEdit(\''+q(t.id)+'\')">📅</button>';
+    h+='<button class="edit-icon-btn" onclick="openEditTask(\''+q(t.id)+'\')">✎</button>';
+    h+='<button class="del-btn" onclick="deleteTask(\''+q(t.id)+'\')">✕</button>';
+  }
+  h+='</div>';
+  if(t.info&&openInfo[t.id])h+='<div class="infopanel"><ul>'+t.info.map(function(p){return'<li>'+esc(p)+'</li>';}).join('')+'</ul></div>';
+  if(editMode&&logEditId===t.id)h+=logEditorHTML(t);
+  return h;
+}
+
+function logEditorHTML(t){
+  var rows=t.log.length===0
+    ?'<div style="font-size:13px;color:#A8BBA0;margin-bottom:8px">Ingen registreringer ennå.</div>'
+    :t.log.slice().reverse().map(function(d){
+      return '<div style="display:flex;align-items:center;justify-content:space-between;padding:4px 0;border-bottom:1px solid #DDE5DE">'
+        +'<span style="font-size:13px">'+d+'</span>'
+        +'<button data-id="'+q(t.id)+'" data-date="'+d+'" onclick="logRemoveDate(this.dataset.id,this.dataset.date)"'
+        +' style="font-size:11px;color:#c0392b;background:none;border:none;cursor:pointer;padding:2px 6px">Slett</button>'
+        +'</div>';
+    }).join('');
+  return '<div class="infopanel" style="padding:10px 14px 14px">'
+    +'<div style="font-size:12px;font-weight:700;color:#6B7D6F;margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em">Logg</div>'
+    +rows
+    +'<div style="display:flex;gap:8px;margin-top:10px">'
+    +'<input id="log-date-inp" type="date" style="flex:1;font-size:13px;padding:7px 10px;border-radius:10px;border:1.5px solid #DDE5DE;background:#F0F2ED;color:#1E2D24" max="'+iso(today)+'">'
+    +'<button onclick="logAddDate()" style="padding:8px 12px;border-radius:9px;border:none;background:#3A6648;color:#fff;font-size:13px;font-weight:600;cursor:pointer">Legg til</button>'
+    +'<button onclick="closeLogEdit()" style="padding:8px 10px;border-radius:9px;border:1.5px solid #DDE5DE;background:transparent;color:#6B7D6F;font-size:13px;cursor:pointer">Lukk</button>'
+    +'</div></div>';
+}
+
+function taskFormHTML(isEdit){
+  var f=mf();
+  var roots=cats.filter(function(c){return!c.parentId;});
+  var catSection=roots.map(function(root){
+    var kids=cats.filter(function(c){return c.parentId===root.id;});
+    return chip(root.name,f.cats.includes(root.id),"toggleCat('"+q(root.id)+"')")
+      +kids.map(function(k){return chip(root.name+' / '+k.name,f.cats.includes(k.id),"toggleCat('"+q(k.id)+"')");}).join('');
+  }).join('')+chipNew('+ Ny kategori','openNewCat()');
+
+  var goalSection=goals.map(function(g){
+    return chip(g.name,f.goals.includes(g.id),"toggleGoal('"+q(g.id)+"')");
+  }).join('')+chipNew('+ Nytt mål','openNewGoal()');
+
+  var valid=formValid();
+  var weekBit='',intBit='',monBit='';
+  if(f.type==='weekly'){
+    weekBit='<label class="field-lbl">Dager</label><div class="chips">'
+      +UKEDAGER.map(function(d,i){return chip(d,f.anchors.includes(i),'toggleAnchor('+i+')');}).join('')+'</div>'
+      +'<label class="field-lbl">Kan skli (dager)</label>'
+      +'<input class="inp inp-sm" type="number" min="0" max="6" value="'+f.slack+'" oninput="mf().slack=this.value">';
+  }
+  if(f.type==='interval'){
+    intBit='<label class="field-lbl">Hver X. dag</label>'
+      +'<input class="inp inp-sm" type="number" min="1" value="'+f.days+'" oninput="mf().days=this.value">';
+  }
+  if(f.type==='monthly'){
+    var dayBit='';
+    if(!f.lastWeekOf&&f.day!==''){
+      dayBit='<label class="field-lbl">Dag i måneden (f.eks. 20)</label>'
+        +'<input class="inp inp-sm" type="number" min="1" max="28" value="'+f.day+'" oninput="mf().day=this.value">'
+        +'<label class="field-lbl">Ligge inne X dager</label>'
+        +'<input class="inp inp-sm" type="number" min="0" max="31" value="'+f.slack+'" oninput="mf().slack=this.value">';
+    }
+    monBit='<label class="field-lbl">Måneder</label><div class="chips">'
+      +MND.map(function(m,i){return chip(m,f.months.includes(i+1),'toggleMonth('+(i+1)+')');}).join('')+'</div>'
+      +'<label class="field-lbl">Tidspunkt i måneden</label><div class="chips">'
+      +chip('Hele måneden',!f.lastWeekOf&&!f.day,"mf().lastWeekOf=false;mf().day='';render()")
+      +chip('Siste uka',f.lastWeekOf,"mf().lastWeekOf=true;mf().day='';render()")
+      +chip('Fra bestemt dag',!f.lastWeekOf&&!!f.day,"mf().lastWeekOf=false;render()")
+      +'</div>'+dayBit;
+  }
+
+  return '<div class="modal-title">'+(isEdit?'Rediger rutine':'Ny rutine')+'</div>'
+    +'<label class="field-lbl">Hva skal gjøres?</label>'
+    +'<textarea class="inp" placeholder="Beskriv rutinen …" oninput="mf().name=this.value;updateSaveBtn()">'+esc(f.name)+'</textarea>'
+    +'<label class="field-lbl">Rytme</label><div class="chips">'
+    +chip('Faste ukedager',f.type==='weekly',"setFormType('weekly')")
+    +chip('Hver X. dag',f.type==='interval',"setFormType('interval')")
+    +chip('Måneder',f.type==='monthly',"setFormType('monthly')")
+    +'</div>'+weekBit+intBit+monBit
+    +'<label class="field-lbl">Kategori(er)</label><div class="chips">'+catSection+'</div>'
+    +'<label class="field-lbl">Knytt til mål'+(f.goals.length===0?' <span style="color:#B86E2A;font-size:11px;font-weight:400">– obligatorisk</span>':'')+'</label>'
+    +'<div class="chips">'+goalSection+'</div>'
+    +'<label class="field-lbl" style="display:flex;align-items:center;gap:8px;cursor:pointer">'
+    +'<input type="checkbox" '+(f.mustDo?'checked':'')+' onchange="mf().mustDo=this.checked"> Må gjøres – henger til den er krysset av</label>'
+    +(isEdit?'<button class="del-full-btn" onclick="deleteTask(\''+q(f.id)+'\');closeModal()">Slett rutine</button>':'')
+    +'<button class="save-btn" onclick="'+(isEdit?'saveEditTask()':'submitTask()')+'" '+(valid?'':'disabled')+'>'+(isEdit?'Lagre endringer':'Lagre rutine')+'</button>';
+}
+
+function modalHTML(){
+  if(!modal)return'';
+  var f=mf(),step=modal.step,body='';
+  if(step==='goal_new'){
+    var gv=f._newGoal||'';
+    body='<button class="step-back" onclick="backToTask()">← Tilbake</button>'
+      +'<div class="modal-title">Nytt mål</div>'
+      +'<label class="field-lbl">Hva vil du oppnå?</label>'
+      +'<input class="inp" id="goal-inp" type="text" value="'+esc(gv)+'" placeholder="F.eks. «Jeg er godt forberedt»" oninput="mf()._newGoal=this.value;updateSaveBtn()">'
+      +'<button class="save-btn" onclick="saveNewGoal()" '+(gv.trim()?'':'disabled')+'>Legg til mål</button>';
+  } else if(step==='goal_edit'){
+    var gv=f.name||'';
+    body='<div class="modal-title">Rediger mål</div>'
+      +'<label class="field-lbl">Navn</label>'
+      +'<input class="inp" id="goal-inp" type="text" value="'+esc(gv)+'" oninput="mf().name=this.value;updateSaveBtn()">'
+      +'<button class="del-full-btn" onclick="deleteGoal(\''+q(f.id)+'\')">Slett mål</button>'
+      +'<button class="save-btn" onclick="saveEditGoal()" '+(gv.trim()?'':'disabled')+'>Lagre endringer</button>';
+  } else if(step==='cat_new'){
+    var cv=f._newCat||'',pv=f._newCatParent||'';
+    var roots=cats.filter(function(c){return!c.parentId;});
+    body='<button class="step-back" onclick="backToTask()">← Tilbake</button>'
+      +'<div class="modal-title">Ny kategori</div>'
+      +'<label class="field-lbl">Navn</label>'
+      +'<input class="inp" type="text" value="'+esc(cv)+'" placeholder="F.eks. «Bil»" oninput="mf()._newCat=this.value;updateSaveBtn()">'
+      +'<label class="field-lbl">Underkategori av (valgfritt)</label><div class="chips">'
+      +chip('Ingen (toppnivå)',!pv,"mf()._newCatParent='';render()")
+      +roots.map(function(c){return chip(c.name,pv===c.id,"mf()._newCatParent='"+q(c.id)+"';render()");}).join('')+'</div>'
+      +'<button class="save-btn" onclick="saveNewCat()" '+(cv.trim()?'':'disabled')+'>Legg til kategori</button>';
+  } else if(step==='cat_edit'){
+    var cv=f.name||'',pv=f.parentId||'';
+    var roots=cats.filter(function(c){return!c.parentId&&c.id!==f.id;});
+    body='<div class="modal-title">Rediger kategori</div>'
+      +'<label class="field-lbl">Navn</label>'
+      +'<input class="inp" type="text" value="'+esc(cv)+'" oninput="mf().name=this.value;updateSaveBtn()">'
+      +'<label class="field-lbl">Underkategori av (valgfritt)</label><div class="chips">'
+      +chip('Ingen (toppnivå)',!pv,"mf().parentId='';render()")
+      +roots.map(function(c){return chip(c.name,pv===c.id,"mf().parentId='"+q(c.id)+"';render()");}).join('')+'</div>'
+      +'<button class="del-full-btn" onclick="deleteCat(\''+q(f.id)+'\')">Slett kategori</button>'
+      +'<button class="save-btn" onclick="saveEditCat()" '+(cv.trim()?'':'disabled')+'>Lagre endringer</button>';
+  } else {
+    body=taskFormHTML(step==='task_edit');
+  }
+  return '<div class="modal-overlay" onclick="if(event.target===this)closeModal()">'
+    +'<div class="modal"><button class="close-btn" onclick="closeModal()">×</button>'+body+'</div></div>';
+}
+
+/* ── Beredskap tab HTML ── */
+function beredskapHTML(){
+  var locs=beredskap.locations,locCats=beredskap.locCats||[];
+  var total=beredskap.items.length;
+  var nChk=Object.values(beredskap.checked).filter(Boolean).length;
+  var h='<div class="sec-lbl">Beredskapsliste</div>'
+    +'<div style="margin:0 12px 14px;padding:16px 18px;background:var(--card);border-radius:14px">'
+    +'<div style="font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px">Privat huskeregel</div>'
+    +'<div style="font-size:12px;line-height:1.85;color:var(--ink);white-space:pre-line">Du skal ikke klistre fine øyeblikk opp på veggen i tankene\nog forgylle dem med lengselen din.\n\nDu skal kjøre spettet\nhardt innunder arrete hverdager\nog vippe dem opp.\n\nEn etter en.\n\nDet er derfor livet har deg på mannskapslista.</div>'
+    +'<div style="font-size:11px;color:var(--sage);margin-top:10px;font-style:italic">Kolbein Falkeid</div>'
+    +'</div>';
+
+  if(total>0){
+    var allDone=nChk===total;
+    h+='<div style="padding:0 12px 10px">'
+      +'<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">'
+      +'<span style="font-size:13px;color:var(--muted)">'+nChk+' av '+total+' punkter sjekket</span>'
+      +(beredskap.lastReset?'<span style="font-size:11px;color:var(--sage)">nullstilt '+beredskap.lastReset+'</span>':'')+'</div>'
+      +'<div style="height:5px;background:var(--line);border-radius:99px;overflow:hidden;margin-bottom:8px">'
+      +'<div style="height:100%;width:'+Math.round(nChk/total*100)+'%;background:var(--green);border-radius:99px"></div></div>'
+      +'<button onclick="bReset()" style="width:100%;padding:9px 0;border-radius:10px;border:1.5px solid var(--line);background:transparent;color:'+(allDone?'var(--green)':'var(--muted)')+';font-size:13px;font-weight:600;cursor:pointer">'
+      +(allDone?'✓ Alle sjekket – nullstill til neste runde':'Nullstill avkryssinger')+'</button></div>';
+  }
+
+  if(!locs.length){
+    h+='<div class="empty">Ingen lokasjoner ennå. Legg til en lokasjon nedenfor.</div>';
+  } else {
+    // Group items by location, then by category within
+    var cols=Math.min(locs.length,3);
+    h+='<div style="display:grid;grid-template-columns:repeat('+cols+',1fr);gap:8px;padding:0 12px">';
+    locs.forEach(function(loc){
+      var locItems=beredskap.items.filter(function(i){return i.loc===loc;});
+      var locChk=locItems.filter(function(i){return beredskap.checked[i.id];}).length;
+      h+='<div style="background:var(--card);border-radius:12px;overflow:hidden;border:1px solid var(--line)">'
+        +'<div style="padding:9px 12px 6px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line)">'
+        +'<span style="font-size:12px;font-weight:700;color:var(--ink)">'+esc(loc)+'</span>'
+        +'<span style="font-size:11px;color:var(--sage)">'+locChk+'/'+locItems.length+'</span></div>';
+
+      if(!locItems.length){
+        h+='<div style="padding:10px 12px;font-size:12px;color:var(--sage);font-style:italic">Tom</div>';
+      } else {
+        // Group by category
+        var usedCats=[];
+        locItems.forEach(function(i){if(i.cat&&!usedCats.includes(i.cat))usedCats.push(i.cat);});
+        var uncatItems=locItems.filter(function(i){return!i.cat;});
+
+        usedCats.forEach(function(cat){
+          h+='<div style="font-size:10px;font-weight:700;color:var(--sage);padding:6px 10px 2px;letter-spacing:.06em;text-transform:uppercase">'+esc(cat)+'</div>';
+          locItems.filter(function(i){return i.cat===cat;}).forEach(function(item){h+=bItemHTML(item);});
+        });
+        uncatItems.forEach(function(item){h+=bItemHTML(item);});
+      }
+
+      if(editMode)h+='<button data-loc="'+esc(loc)+'" onclick="bDeleteLocation(this.dataset.loc)" style="width:100%;padding:7px 0;border:none;background:none;color:#c0392b;font-size:12px;font-weight:600;cursor:pointer">Slett lokasjon</button>';
+      h+='</div>';
+    });
+    h+='</div>';
+  }
+
+  // Add item form
+  if(locs.length){
+    var catOptions='<option value="">Ingen kategori</option>'
+      +locCats.map(function(c){return'<option value="'+esc(c)+'">'+esc(c)+'</option>';}).join('');
+    h+='<div style="margin:10px 12px 0;background:var(--card);border-radius:12px;border:1px solid var(--line);padding:12px">'
+      +'<div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">Legg til punkt</div>'
+      +'<div style="font-size:11px;color:var(--sage);margin-bottom:4px">Velg én eller flere lokasjoner</div>'
+      +'<div class="chips" style="margin-bottom:8px">'
+      +locs.map(function(l){
+        var on=bAddLocs.includes(l);
+        return'<button data-loc="'+esc(l)+'" onclick="bToggleAddLoc(this.dataset.loc)" class="chip'+(on?' on':'')+'" style="font-size:12px;padding:4px 10px">'+esc(l)+'</button>';
+      }).join('')+'</div>';
+
+    if(locCats.length){
+      h+='<div style="margin-bottom:8px">'
+        +'<select id="b-cat-sel" style="width:100%;padding:8px 10px;border-radius:9px;border:1.5px solid var(--line);background:var(--bg);font-size:13px;color:var(--ink)">'+catOptions+'</select>'
+        +'</div>';
+    }
+
+    h+='<div style="display:flex;gap:8px">'
+      +'<input id="b-new-inp" class="inp" type="text" placeholder="Hva skal være på lager?" style="flex:1;font-size:14px" onkeydown="if(event.key===\'Enter\')bAddItem()">'
+      +'<button onclick="bAddItem()" style="padding:10px 14px;border-radius:10px;border:none;background:var(--green);color:#fff;font-size:16px;font-weight:700;cursor:pointer">+</button>'
+      +'</div></div>';
+  }
+
+  // Add location
+  h+='<div style="margin:8px 12px 0;background:var(--card);border-radius:12px;border:1.5px dashed var(--sage);overflow:hidden">';
+  if(!bShowNewLoc){
+    h+='<button onclick="bShowNewLoc=true;render()" style="width:100%;padding:11px 0;border:none;background:transparent;color:var(--muted);font-size:13px;font-weight:600;cursor:pointer">+ Ny lokasjon</button>';
+  } else {
+    h+='<div style="display:flex;gap:8px;padding:10px">'
+      +'<input id="b-loc-inp" class="inp" type="text" placeholder="Navn på lokasjon …" style="flex:1;font-size:14px" oninput="bNewLocInput=this.value" onkeydown="if(event.key===\'Enter\')bAddLocation();if(event.key===\'Escape\'){bShowNewLoc=false;render();}">'
+      +'<button onclick="bAddLocation()" style="padding:10px 14px;border-radius:10px;border:none;background:var(--green);color:#fff;font-size:15px;font-weight:700;cursor:pointer">+</button>'
+      +'<button onclick="bShowNewLoc=false;render()" style="padding:10px 12px;border-radius:10px;border:1.5px solid var(--line);background:transparent;color:var(--muted);font-size:13px;cursor:pointer">Avbryt</button>'
+      +'</div>';
+  }
+  h+='</div>';
+
+  // Add loc category (only show if edit mode or already has cats)
+  {
+    h+='<div style="margin:8px 12px 0;background:var(--card);border-radius:12px;border:1.5px dashed var(--sage);overflow:hidden">';
+    if(!bShowNewLocCat){
+      h+='<button onclick="bShowNewLocCat=true;render()" style="width:100%;padding:11px 0;border:none;background:transparent;color:var(--muted);font-size:13px;font-weight:600;cursor:pointer">+ Ny kategori for beredskapslista</button>';
+    } else {
+      h+='<div style="display:flex;gap:8px;padding:10px">'
+        +'<input id="b-lcat-inp" class="inp" type="text" placeholder="F.eks. Mat, Hygiene …" style="flex:1;font-size:14px" oninput="bNewLocCatInput=this.value" onkeydown="if(event.key===\'Enter\')bAddLocCat();if(event.key===\'Escape\'){bShowNewLocCat=false;render();}">'
+        +'<button onclick="bAddLocCat()" style="padding:10px 14px;border-radius:10px;border:none;background:var(--green);color:#fff;font-size:15px;font-weight:700;cursor:pointer">+</button>'
+        +'<button onclick="bShowNewLocCat=false;render()" style="padding:10px 12px;border-radius:10px;border:1.5px solid var(--line);background:transparent;color:var(--muted);font-size:13px;cursor:pointer">Avbryt</button>'
+        +'</div>';
+    }
+    if(editMode&&locCats.length){
+      h+='<div style="padding:4px 12px 8px;display:flex;flex-wrap:wrap;gap:6px">'
+        +locCats.map(function(c){
+          return'<span style="font-size:12px;background:var(--green-soft);color:var(--green);padding:3px 10px;border-radius:99px">'+esc(c)
+            +'<button data-cat="'+esc(c)+'" onclick="bDeleteLocCat(this.dataset.cat)" style="background:none;border:none;color:#c0392b;cursor:pointer;font-size:12px;margin-left:4px">✕</button></span>';
+        }).join('')+'</div>';
+    }
+    h+='</div>';
+  }
+
+  return h;
+}
+
+function bItemHTML(item){
+  var on=!!beredskap.checked[item.id];
+  return'<div style="display:flex;align-items:flex-start;gap:8px;padding:8px 10px;border-bottom:1px solid var(--line);'+(on?'opacity:.55':'')+'">'
+    +'<button class="chk'+(on?' done':'')+'" style="width:20px;height:20px;border-radius:5px;flex-shrink:0;margin-top:1px" onclick="bToggle(\''+q(item.id)+'\')"><span style="font-size:11px">'+(on?'✓':'')+'</span></button>'
+    +'<span style="font-size:13px;flex:1;line-height:1.4;'+(on?'text-decoration:line-through;color:var(--muted)':'')+'"">'+esc(item.name)+'</span>'
+    +(editMode?'<button class="del-btn" style="font-size:11px" onclick="bDeleteItem(\''+q(item.id)+'\')">✕</button>':'')
+    +'</div>';
+}
+
+
+/* Update save button state without full re-render */
+function updateSaveBtn(){
+  var btn = document.querySelector('.save-btn');
+  if(!btn||!modal) return;
+  var f = mf();
+  var step = modal.step;
+  var enabled = false;
+  if(step==='goal_new')   enabled = (f._newGoal||'').trim().length > 0;
+  if(step==='goal_edit')  enabled = (f.name||'').trim().length > 0;
+  if(step==='cat_new')    enabled = (f._newCat||'').trim().length > 0;
+  if(step==='cat_edit')   enabled = (f.name||'').trim().length > 0;
+  if(step==='task' || step==='task_edit') enabled = formValid();
+  btn.disabled = !enabled;
+}
+
+/* ── Main render ── */
+function render(){
+  var curM=today.getMonth()+1;
+  var mwt=new Set(tasks.flatMap(function(t){return t.type==='monthly'?t.schedule.months:[];}));
+  var todayRows=tasks.filter(function(t){return taskDue(t,today)||taskDoneToday(t,today);});
+  var monthRows=tasks.filter(function(t){
+    if(t.type!=='monthly')return false;
+    if(!t.schedule.months.includes(curM))return false;
+    var ym=today.getFullYear()+'-'+pad(curM);
+    return t.log.some(function(l){return l.startsWith(ym);});
+  });
+
+  var topbar='<div class="topbar">'
+    +'<div class="topbar-row"><h1>I orden</h1>'
+    +'<div class="topbar-right">'
+    +(editMode?'<button class="icon-btn" onclick="exportJSON()">↓ Eksporter</button>'
+              +'<button class="icon-btn" onclick="importJSON()">↑ Importer</button>':'')
+    +'<button class="edit-btn'+(editMode?' on':'')+'" onclick="setEdit('+(editMode?'false':'true')+')">'+(editMode?'Ferdig':'Rediger')+'</button>'
+    +'</div></div>'
+    +'<div class="date-lbl">'+UKEDAGER_FULL[dow(today)]+' '+today.getDate()+'. '+MND_FULL[today.getMonth()]+'</div>'
+    +'<div class="tabs">'
+    +['idag','arshjul','beredskap','kategorier','mal'].map(function(t2){
+      var labels={idag:'I dag',arshjul:'Årshjul',beredskap:'Beredskap',kategorier:'Kategorier',mal:'Mål'};
+      return'<button class="tab'+(tab===t2?' on':'')+'" onclick="setTab(\''+t2+'\')">'+labels[t2]+'</button>';
+    }).join('')
+    +'</div></div>';
+
+  var content='';
+
+  if(tab==='idag'){
+    content+='<div class="sec-lbl">Til i dag</div><div class="card">'
+      +(todayRows.length?todayRows.map(function(t){return trowHTML(t,today);}).join('')
+        :'<div class="empty">'+(tasks.length===0?'Ingen rutiner ennå. Trykk + for å legge til din første.':'Ingenting på planen i dag. 🌿')+'</div>')
+      +'</div>';
+    if(monthRows.length){
+      content+='<div class="sec-lbl">Gjort denne måneden</div><div class="card">'
+        +monthRows.map(function(t){return trowHTML(t,today);}).join('')+'</div>';
+    }
+  }
+
+  if(tab==='arshjul'){
+    content+='<div style="height:12px"></div><div class="wheel">';
+    MND.forEach(function(m,i){
+      var mi=i+1,isCur=mi===curM,isSel=previewM===mi;
+      content+='<button class="wbtn'+(isCur?' cur':'')+(isSel?' sel':'')+'" aria-label="'+MND_FULL[i]+'" onclick="togglePreview('+mi+')">'
+        +m+'<span class="wdot'+(mwt.has(mi)?' on':'')+'"></span></button>';
+    });
+    content+='</div>';
+    if(previewM){
+      var prows=tasks.filter(function(t){return t.type==='monthly'&&t.schedule.months.includes(previewM);});
+      content+='<div class="card" style="margin-top:8px">'
+        +'<div class="preview-head">'+MND_FULL[previewM-1].charAt(0).toUpperCase()+MND_FULL[previewM-1].slice(1)+'</div>'
+        +(prows.length?prows.map(function(t){return'<div class="preview-row"><span>'+esc(t.name)+'</span>'+(t.mustDo?'<span class="must-tag">må gjøres</span>':'')+'</div>';}).join('')
+          :'<div class="empty">Ingen oppgaver denne måneden.</div>')
+        +'</div>';
+    } else {
+      content+='<div class="empty" style="text-align:center">Trykk på en måned for å se hva som venter.</div>';
+    }
+  }
+
+  if(tab==='beredskap')content+=beredskapHTML();
+
+  if(tab==='kategorier'){
+    var roots=cats.filter(function(c){return!c.parentId;});
+    if(!roots.length){
+      content+='<div class="empty">Ingen kategorier ennå.</div>';
+    } else {
+      roots.forEach(function(root){
+        var kids=cats.filter(function(c){return c.parentId===root.id;});
+        var allIds=[root.id].concat(kids.map(function(k){return k.id;}));
+        if(!tasks.some(function(t){return t.cats.some(function(c){return allIds.includes(c);});}))return;
+        content+='<div class="sec-lbl">'+esc(root.name)
+          +(editMode?' <button class="edit-icon-btn" style="font-size:12px" onclick="openEditCat(\''+q(root.id)+'\')">✎</button>':'')+'</div>';
+        var rootTasks=tasks.filter(function(t){return t.cats.includes(root.id);});
+        if(rootTasks.length)content+='<div class="card">'+rootTasks.map(function(t){return trowHTML(t,today);}).join('')+'</div>';
+        kids.forEach(function(kid){
+          var kidTasks=tasks.filter(function(t){return t.cats.includes(kid.id);});
+          if(!kidTasks.length)return;
+          content+='<div class="card" style="margin-top:4px"><div class="subcat-lbl">'+esc(kid.name)
+            +(editMode?' <button class="edit-icon-btn" style="font-size:12px" onclick="openEditCat(\''+q(kid.id)+'\')">✎</button>':'')
+            +'</div>'+kidTasks.map(function(t){return trowHTML(t,today);}).join('')+'</div>';
+        });
+      });
+    }
+  }
+
+  if(tab==='mal'){
+    if(!goals.length){
+      content+='<div class="empty">Ingen mål ennå. De opprettes når du legger til rutiner.</div>';
+    } else {
+      goals.forEach(function(g){
+        var linked=tasks.filter(function(t){return(t.goals||[]).includes(g.id);});
+        content+='<div class="goal-card"><div class="goal-head"><div class="goal-name">'+esc(g.name)+'</div>'
+          +(editMode?'<button class="edit-icon-btn" onclick="openEditGoal(\''+q(g.id)+'\')">✎</button>':'')
+          +'</div><div class="goal-tasks">'
+          +(linked.length?linked.map(function(t){return'<div class="goal-task-item">· '+esc(t.name)+'</div>';}).join('')
+            :'<div class="goal-task-item" style="font-style:italic">Ingen rutiner knyttet til dette målet.</div>')
+          +'</div></div>';
+      });
+    }
+  }
+
+  document.getElementById('app').innerHTML=topbar+'<div class="shell">'+content+'</div>'
+    +'<button class="fab" onclick="openModal()" aria-label="Ny rutine">+</button>'
+    +modalHTML();
+
+  // Autofocus
+  var fi=document.getElementById('goal-inp');if(fi)fi.focus();
+  var li=document.getElementById('b-loc-inp');if(li){li.focus();li.value=bNewLocInput;}
+  var lci=document.getElementById('b-lcat-inp');if(lci){lci.focus();lci.value=bNewLocCatInput;}
+}
+
+load();
+</script>
+</body>
+</html>
